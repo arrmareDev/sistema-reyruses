@@ -1,0 +1,259 @@
+/* =========================================
+   REY ROSES — Design System v3
+   Paleta: Blanco limpio + Naranja #D4830A
+   ========================================= */
+
+/* ─────────────────────────────────────────
+   TOKENS DE DISEÑO
+   ───────────────────────────────────────── */
+:root {
+
+  /* Naranja — color de marca */
+  --or:  #D4830A;
+  --or2: #E8960F;  /* hover */
+  --or3: #F5B040;  /* soft */
+  --orb: #FEF0D5;  /* background tint */
+  --orl: #FFF5E6;  /* background ultra-light */
+
+  /* Negros */
+  --bk:  #111111;
+  --bk2: #222222;
+
+  /* Blancos / fondos */
+  --wh:  #FFFFFF;
+  --wh2: #FAFAFA;
+  --wh3: #F5F3EF;
+
+  /* Grises */
+  --gr:  #6B6560;  /* texto secundario */
+  --gr2: #9E9890;  /* texto muted */
+  --gr3: #E8E3DC;  /* bordes */
+
+  /* Tipografía */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'DM Sans', 'Helvetica Neue', sans-serif;
+
+  /* Escala tipográfica */
+  --text-xs:   0.75rem;   /*  12px */
+  --text-sm:   0.875rem;  /*  14px */
+  --text-base: 1rem;      /*  16px */
+  --text-lg:   1.125rem;  /*  18px */
+  --text-xl:   1.375rem;  /*  22px */
+  --text-2xl:  1.75rem;   /*  28px */
+  --text-3xl:  2.5rem;    /*  40px */
+  --text-4xl:  3.5rem;    /*  56px */
+
+  /* Pesos */
+  --weight-light:   300;
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semi:    600;
+  --weight-bold:    700;
+  --weight-black:   900;
+
+  /* Espaciado */
+  --space-1:  0.25rem;   /*  4px */
+  --space-2:  0.5rem;    /*  8px */
+  --space-3:  0.75rem;   /* 12px */
+  --space-4:  1rem;      /* 16px */
+  --space-6:  1.5rem;    /* 24px */
+  --space-8:  2rem;      /* 32px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+  --space-20: 5rem;      /* 80px */
+  --space-24: 6rem;      /* 96px */
+
+  /* Bordes redondeados */
+  --radius-sm:   3px;
+  --radius-md:   6px;
+  --radius-lg:   8px;
+  --radius-xl:   16px;   /* nuevo — usado en formularios */
+  --radius-full: 9999px;
+
+  /* Sombras */
+  --shadow-sm: 0 2px 8px   rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 6px 24px  rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+  --shadow-or: 0 4px 16px  rgba(212, 131, 10, 0.28);
+
+  /* Transiciones */
+  --transition-fast: 150ms ease;
+  --transition-base: 300ms ease;
+  --transition-slow: 600ms ease;
+
+  /* Layout */
+  --container-max: 1600px;
+  --container-pad: clamp(1.25rem, 5vw, 3rem);
+  --header-h:      64px;
+}
+
+/* ─────────────────────────────────────────
+   RESET
+   ───────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* scroll-behavior solo si el usuario no prefiere movimiento reducido */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: var(--weight-regular);
+  color: var(--bk);
+  background: var(--wh);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden; /* evita scroll horizontal accidental en mobile */
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent; /* elimina flash azul en iOS */
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+/* evita estilos del sistema en iOS */
+input,
+textarea {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* ─────────────────────────────────────────
+   UTILIDADES
+   ───────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* oculto visualmente pero leíble por lectores de pantalla */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ─────────────────────────────────────────
+   ANIMACIONES
+   Solo se definen si el usuario no prefiere
+   movimiento reducido.
+   ───────────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.7s ease both;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease both;
+  }
+}
+
+/* si prefiere movimiento reducido: visible directo */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-fade-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ─────────────────────────────────────────
+   ACCESIBILIDAD
+   ───────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--or);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* ─────────────────────────────────────────
+   NAVEGADOR — scrollbar y selección
+   ───────────────────────────────────────── */
+::-webkit-scrollbar       { width: 5px; }
+::-webkit-scrollbar-track { background: var(--wh3); }
+::-webkit-scrollbar-thumb {
+  background: var(--or);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--or2);
+}
+
+::selection {
+  background-color: var(--orb);
+  color: var(--or);
+}
