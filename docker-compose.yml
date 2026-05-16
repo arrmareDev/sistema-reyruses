@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # 1. BASE DE DATOS (Aislada y segura)
+  reyruses_db:
+    image: mysql:8.0
+    container_name: reyruses_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: reyruses_db
+      MYSQL_USER: reyruses_user
+      MYSQL_PASSWORD: reyruses_password
+      MYSQL_ROOT_PASSWORD: root_password_seguro
+    volumes:
+      - reyruses_mysql_data:/var/lib/mysql
+    networks:
+      - reyruses_net
+
+  # 2. BACKEND (Laravel API)
+  reyruses_api:
+    build:
+      context: ./reyruses-api
+    container_name: reyruses_api
+    restart: unless-stopped
+    ports:
+      - "9000:80" # Expuesto internamente en el puerto 9000
+    depends_on:
+      - reyruses_db
+    networks:
+      - reyruses_net
+
+  # 3. FRONTEND (Landing Page en Vue)
+  reyruses_landing:
+    build:
+      context: ./reyruses-landing
+    container_name: reyruses_landing
+    restart: unless-stopped
+    ports:
+      - "9001:80" # Expuesto internamente en el puerto 9001
+    networks:
+      - reyruses_net
+
+  # 4. FRONTEND (Panel Admin en Vue)
+  reyruses_admin:
+    build:
+      context: ./admin-reyruses
+    container_name: reyruses_admin
+    restart: unless-stopped
+    ports:
+      - "9002:80" # Expuesto internamente en el puerto 9002
+    networks:
+      - reyruses_net
+
+# Configuración de red y persistencia de datos
+networks:
+  reyruses_net:
+    driver: bridge
+
+volumes:
+  reyruses_mysql_data:
