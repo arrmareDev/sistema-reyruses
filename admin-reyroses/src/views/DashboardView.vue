@@ -178,7 +178,7 @@
                 >
                   <img
                     v-if="product.image_path"
-                    :src="'http://127.0.0.1:8000/storage/' + product.image_path"
+                    :src="import.meta.env.VITE_API_URL + '/storage/' + product.image_path"
                     class="w-full h-full object-cover"
                   />
                   <span
@@ -783,7 +783,7 @@ const switchModule = (module) => {
 // --- FUNCIONES DEL CATÁLOGO ---
 const fetchProducts = async () => {
   try {
-    const response = await axios.get('http://127.0.0.1:8000/api/products', {
+    const response = await axios.get(import.meta.env.VITE_API_URL + '/api/products', {
       headers: getAuthHeaders(),
     })
     products.value = response.data
@@ -862,7 +862,7 @@ const saveProduct = async () => {
       })
       toast.success('Variedad actualizada correctamente')
     } else {
-      await axios.post('http://127.0.0.1:8000/api/products', formData, {
+      await axios.post(import.meta.env.VITE_API_URL + '/api/products', formData, {
         headers: { ...getAuthHeaders(), 'Content-Type': 'multipart/form-data' },
       })
       toast.success('Nueva variedad agregada al catálogo')
@@ -922,7 +922,7 @@ const executeDeleteProduct = async () => {
 // --- FUNCIONES DE PEDIDOS ---
 const fetchOrders = async () => {
   try {
-    const response = await axios.get('http://127.0.0.1:8000/api/orders', {
+    const response = await axios.get(import.meta.env.VITE_API_URL + '/api/orders', {
       headers: getAuthHeaders(),
     })
     orders.value = response.data
