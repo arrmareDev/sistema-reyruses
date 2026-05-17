@@ -785,7 +785,7 @@ const switchModule = (module) => {
 // --- FUNCIONES DEL CATÁLOGO ---
 const fetchProducts = async () => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/products`, {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}api/products`, {
       headers: getAuthHeaders(),
     })
     products.value = response.data
@@ -859,12 +859,12 @@ const saveProduct = async () => {
 
     if (isEditing.value) {
       formData.append('_method', 'PUT')
-      await axios.post(`${import.meta.env.VITE_API_URL}/products/${editingId.value}`, formData, {
+      await axios.post(`${import.meta.env.VITE_API_URL}api/products/${editingId.value}`, formData, {
         headers: { ...getAuthHeaders(), 'Content-Type': 'multipart/form-data' },
       })
       toast.success('Variedad actualizada correctamente')
     } else {
-      await axios.post(`${import.meta.env.VITE_API_URL}/products`, formData, {
+      await axios.post(`${import.meta.env.VITE_API_URL}api/products`, formData, {
         headers: { ...getAuthHeaders(), 'Content-Type': 'multipart/form-data' },
       })
       toast.success('Nueva variedad agregada al catálogo')
@@ -907,7 +907,7 @@ const openDeleteConfirmModal = (product) => {
 const executeDeleteProduct = async () => {
   if (!productToDelete.value) return
   try {
-    await axios.delete(`${import.meta.env.VITE_API_URL}/products/${productToDelete.value.id}`, {
+    await axios.delete(`${import.meta.env.VITE_API_URL}api/products/${productToDelete.value.id}`, {
       headers: getAuthHeaders(),
     })
     toast.success(`La variedad "${productToDelete.value.name}" fue eliminada`)
@@ -924,7 +924,7 @@ const executeDeleteProduct = async () => {
 // --- FUNCIONES DE PEDIDOS ---
 const fetchOrders = async () => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/orders`, {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}api/orders`, {
       headers: getAuthHeaders(),
     })
     orders.value = response.data
@@ -952,7 +952,7 @@ const executeOrderStatusUpdate = async () => {
   const { id, status } = pendingStatusUpdate.value
   try {
     await axios.put(
-      `${import.meta.env.VITE_API_URL}/orders/${id}/status`,
+      `${import.meta.env.VITE_API_URL}api/orders/${id}/status`,
       { status },
       { headers: getAuthHeaders() },
     )
