@@ -86,9 +86,9 @@
       <ul class="cart-list" v-if="cart.length > 0">
         <li v-for="item in cart" :key="item.id" class="cart-item">
           
-          <div class="cart-item__details">
-            <img v-if="item.image_path" :src="import.meta.env.VITE_API_URL + '/storage/' + item.image_path" :alt="item.name" class="cart-item__img" />
-            <div v-else class="cart-item__img bg-neutral-200 flex items-center justify-center text-[10px] text-neutral-500">Sin foto</div>
+         <div class="cart-item__details">
+    <img v-if="item.image_path" :src="apiUrl + '/storage/' + item.image_path" :alt="item.name" class="cart-item__img" />
+    <div v-else class="cart-item__img bg-neutral-200 flex items-center justify-center text-[10px] text-neutral-500">Sin foto</div>
             
             <div class="cart-item__info">
               <h4>{{ item.name }}</h4>
@@ -145,7 +145,7 @@
       </button>
 
       <div class="stem-modal__header">
-        <img v-if="activeProduct.image_path" :src="import.meta.env.VITE_API_URL + '/storage/' + activeProduct.image_path" class="stem-modal__img" />
+<img v-if="activeProduct.image_path" :src="apiUrl + '/storage/' + activeProduct.image_path" class="stem-modal__img" />
         <div v-else class="stem-modal__img-placeholder">Sin fotografía</div>
         
         <div class="stem-modal__gradient"></div>
@@ -229,7 +229,7 @@ const apiProducts = ref([])
 
 const fetchProducts = async () => {
   try {
-    const response = await axios.get(import.meta.env.VITE_API_URL + '/api/products')
+    const response = await axios.get(apiUrl + '/api/products')
     apiProducts.value = response.data
   } catch (error) {
     console.error('Error cargando el catálogo:', error)
