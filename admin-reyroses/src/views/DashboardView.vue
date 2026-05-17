@@ -178,7 +178,7 @@
                 >
                   <img
                     v-if="product.image_path"
-                    :src="import.meta.env.VITE_API_URL + '/storage/' + product.image_path"
+                    :src="apiUrl + '/storage/' + product.image_path"
                     class="w-full h-full object-cover"
                   />
                   <span
@@ -727,6 +727,8 @@
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
 import { toast } from 'vue-sonner'
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 // --- CONTROL DE MÓDULOS ---
 const currentModule = ref('catalogo')

@@ -46,7 +46,7 @@
         <ul class="catalog__grid">
           <li v-for="product in filteredProducts" :key="product.id" class="product-card">
             <div class="product-card__img-wrapper">
-               <img v-if="product.image_path" :src="import.meta.env.VITE_API_URL + '/storage/' + product.image_path" :alt="product.name" class="product-card__img" loading="lazy" />
+               <img v-if="product.image_path" :src="apiUrl + '/storage/' + product.image_path":alt="product.name" class="product-card__img" loading="lazy" />
                <div v-else class="w-full h-full bg-neutral-200 flex items-center justify-center text-xs text-neutral-500">Sin foto</div>
             </div>
             
@@ -203,6 +203,8 @@ import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import { useCart } from '@/composables/useCart.js'
 import axios from 'axios'
 import { toast } from 'vue-sonner'
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const { cart, totalItems, cartTotal, addToCart, decreaseQuantity, removeFromCart, sendWhatsAppOrder } = useCart()
 const isCartOpen = ref(false)
