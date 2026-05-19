@@ -17,7 +17,7 @@
       </figure>
 
       <!-- Chip: años de experiencia -->
-      <div class="about__chip" aria-label="Más de 15 años de experiencia">
+      <div class="about__chip" aria-label="Más de 5 años de experiencia">
         <strong class="chip__num">15<span aria-hidden="true">+</span></strong>
         <span class="chip__label">Años cultivando</span>
       </div>
@@ -38,7 +38,7 @@
       <!-- Lead -->
       <p class="about__lead" data-reveal>
         Desde los Andes ecuatorianos en Ecuador hasta los hogares y negocios más
-        exigentes de Perú, REY ROSES cultiva y distribuye rosas que transmiten
+        exigentes de Perú, REY RUSES cultiva y distribuye rosas que transmiten
         emociones auténticas. Nuestra cadena de producción y logística asegura que
         cada flor conserve su frescura y belleza al llegar a destino. Hoy, nuestras
         rosas llegan a todo Chiclayo, llevando consigo la esencia de la tierra

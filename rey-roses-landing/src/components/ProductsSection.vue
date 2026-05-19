@@ -101,7 +101,12 @@
             <div class="cart-item__qty">
               <button @click="decreaseQuantity(item.id)">-</button>
               <span>{{ item.quantity }}</span>
-              <button @click="addToCart(item)">+</button>
+              <button 
+                @click="addToCart(item)"
+                :disabled="item.quantity >= item.max_stock"
+                :style="item.quantity >= item.max_stock ? 'opacity: 0.3; cursor: not-allowed; background: #e5e5e5; color: #a3a3a3;' : ''"
+                :title="item.quantity >= item.max_stock ? 'Stock máximo alcanzado' : 'Agregar otro'"
+              >+</button>
             </div>
             
             <button @click="removeFromCart(item.id)" class="cart-item__remove" title="Eliminar variedad">
@@ -162,20 +167,42 @@
       </div>
 
       <div class="stem-modal__body">
-        <div class="stem-modal__label-wrapper">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="stem-icon"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-          <p class="stem-modal__label">Selecciona la longitud del tallo</p>
-        </div>
         
-        <div class="stem-modal__stems">
-          <button 
-            v-for="length in [50, 60, 70, 80, 90]" 
-            :key="length"
-            @click="selectedStem = length"
-            :class="['stem-btn', { 'stem-btn--active': selectedStem === length }]"
-          >
-            {{ length }}<span>cm</span>
-          </button>
+        <div class="stem-modal__stem-selection">
+          <label for="stem-select" class="stem-modal__label">Selecciona la longitud de tu tallo</label>
+          <div class="stem-modal__select-wrapper">
+            <select 
+              id="stem-select" 
+              v-model="selectedStem"
+              class="stem-modal__select"
+            >
+              <option 
+                v-for="length in [50, 60, 70, 80, 90]" 
+                :key="length" 
+                :value="length"
+                :disabled="activeProduct[`stock_${length}`] <= 0"
+              >
+                {{ length }}cm {{ activeProduct[`stock_${length}`] <= 0 ? '- AGOTADO' : '' }}
+              </option>
+            </select>
+            <svg class="stem-modal__select-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
+        </div>
+
+        <div class="stem-modal__stock-display">
+          <div class="stem-modal__stock-info">
+            <span class="stem-modal__stock-title">Unidades Disponibles</span>
+            <span class="stem-modal__stock-subtitle">Stock actualizado en tiempo real</span>
+          </div>
+          <div class="stem-modal__stock-number">
+            <template v-if="activeProduct[`stock_${selectedStem}`] > 0">
+              <span class="stock-qty">{{ activeProduct[`stock_${selectedStem}`] }}</span>
+              <span class="stock-unit">pqtes.</span>
+            </template>
+            <template v-else>
+              <span class="stock-out">Agotado</span>
+            </template>
+          </div>
         </div>
 
         <div class="stem-modal__price-row">
@@ -264,32 +291,58 @@ const activeProduct = ref(null)
 const selectedStem = ref(50) 
 
 const openStemModal = (product) => {
-  activeProduct.value = product
-  selectedStem.value = 50 
-  showStemModal.value = true
+  activeProduct.value = product;
+  
+  // Lógica inteligente: Buscar la primera medida que sí tenga stock
+  const availableStems = [50, 60, 70, 80, 90];
+  const firstAvailable = availableStems.find(length => product[`stock_${length}`] > 0);
+  
+  // Si encuentra una disponible, la selecciona. Si todas están agotadas, lo deja en 50 por defecto.
+  selectedStem.value = firstAvailable !== undefined ? firstAvailable : 50; 
+  
+  showStemModal.value = true;
 }
 
 const confirmAddToCart = () => {
   if (!activeProduct.value) return
 
+  // 1. Obtenemos el stock exacto de esa medida
+  const stockKey = `stock_${selectedStem.value}`
+  const exactStock = activeProduct.value[stockKey]
+
+  if (exactStock <= 0) {
+    toast.error('Esta medida de tallo está agotada actualmente.');
+    return;
+  }
+
+  const cartItemId = `${activeProduct.value.id}-${selectedStem.value}`
+  
+  // 2. CANDADO: Verificamos cuántos hay ya en el carrito
+  const existingItem = cart.value.find(item => item.id === cartItemId)
+  if (existingItem && existingItem.quantity >= exactStock) {
+    toast.error(`¡Límite alcanzado! Solo tenemos ${exactStock} paquetes en stock.`);
+    return; // Detenemos la función, no agrega nada
+  }
+
+  // 3. Preparamos el item guardando su stock máximo (max_stock)
   const priceKey = `price_${selectedStem.value}`
   const exactPrice = parseFloat(activeProduct.value[priceKey])
 
   const cartItem = {
     ...activeProduct.value,
-    id: `${activeProduct.value.id}-${selectedStem.value}`, 
+    id: cartItemId, 
     name: `${activeProduct.value.name} (${selectedStem.value}cm)`, 
-    price: exactPrice 
+    price: exactPrice,
+    max_stock: exactStock // <--- ¡NUEVO! Guardamos el límite para el carrito
   }
 
   addToCart(cartItem)
   
-  toast.success(`Variedad ${cartItem.name} agregada a tu cotización`)
-  
+  toast.success(`Agregado. Tienes ${existingItem ? existingItem.quantity + 1 : 1} paquete(s) en tu cotización.`)
   showStemModal.value = false 
 }
 
-// ── Categorías (Se mantienen estáticas) ──
+
 const CATEGORIES = [
   {
     id: 1,
@@ -1020,75 +1073,6 @@ const CATEGORIES = [
   padding: 2rem 1.5rem;
 }
 
-.stem-modal__label-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 1.2rem;
-  color: var(--gr);
-}
-
-.stem-icon {
-  color: var(--or);
-}
-
-.stem-modal__label {
-  font-size: 0.8rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.stem-modal__stems {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-bottom: 2.5rem;
-}
-
-.stem-btn {
-  flex: 1;
-  padding: 0.9rem 0;
-  border-radius: 16px; 
-  border: 2px solid #f0f0f0;
-  background: var(--wh);
-  color: #a1a1aa;
-  font-weight: 900;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  gap: 4px;
-}
-
-.stem-btn span {
-  font-size: 0.55rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.stem-btn:hover {
-  border-color: #d4d4d8;
-  color: var(--bk);
-}
-
-.stem-btn--active {
-  background: var(--or);
-  border-color: var(--or);
-  color: white;
-  transform: translateY(-4px);
-  box-shadow: 0 10px 20px -5px rgba(232, 117, 26, 0.4);
-}
-
-.stem-btn--active span {
-  color: rgba(255,255,255,0.9);
-}
-
 .stem-modal__price-row {
   display: flex;
   justify-content: space-between;
@@ -1157,7 +1141,117 @@ const CATEGORIES = [
   box-shadow: 0 12px 25px rgba(232, 117, 26, 0.3);
 }
 
-/* 👇👇 AQUÍ ESTÁ LA NUEVA MAGIA RESPONSIVA 👇👇 */
+/* --- Nuevo Diseño del Modal (Selector Desplegable y Stock) --- */
+
+.stem-modal__stem-selection {
+  margin-bottom: 1.5rem;
+}
+
+.stem-modal__label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gr);
+  margin-bottom: 0.8rem;
+}
+
+.stem-modal__select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.stem-modal__select {
+  width: 100%;
+  appearance: none; 
+  -webkit-appearance: none;
+  background-color: #f9f9fa;
+  border: 2px solid #f0f0f0;
+  border-radius: 16px;
+  padding: 1.2rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--bk);
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.stem-modal__select:focus, .stem-modal__select:hover {
+  border-color: var(--or);
+  box-shadow: 0 4px 12px rgba(232, 117, 26, 0.1);
+}
+
+.stem-modal__select-icon {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  color: var(--or);
+  pointer-events: none; 
+}
+
+/* --- Panel de Stock Verde --- */
+.stem-modal__stock-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f0fdf4; 
+  border: 1px solid #bbf7d0;
+  border-radius: 18px;
+  padding: 1.2rem 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stem-modal__stock-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stem-modal__stock-title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #166534; 
+}
+
+.stem-modal__stock-subtitle {
+  font-size: 0.65rem;
+  color: #22c55e;
+  margin-top: 4px;
+}
+
+.stem-modal__stock-number {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.stock-qty {
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: #10b981; 
+  line-height: 1;
+}
+
+.stock-unit {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #10b981;
+  text-transform: uppercase;
+}
+
+.stock-out {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #ef4444; 
+  text-transform: uppercase;
+}
+
 @media (max-width: 640px) {
   .stem-modal__header {
     height: 160px; 
@@ -1169,12 +1263,6 @@ const CATEGORIES = [
   
   .stem-modal__body {
     padding: 1.2rem;
-  }
-  
-  .stem-btn {
-    padding: 0.7rem 0;
-    font-size: 0.85rem;
-    border-radius: 12px;
   }
   
   .stem-modal__price-value {

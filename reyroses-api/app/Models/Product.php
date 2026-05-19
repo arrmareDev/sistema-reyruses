@@ -9,7 +9,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    // 👇 Laravel solo guardará las columnas que estén escritas en esta lista 👇
+
     protected $fillable = [
         'category_id',
         'name',
@@ -17,10 +17,15 @@ class Product extends Model
         'description',
         'price',
         'price_50',
+        'stock_50',
         'price_60',
+        'stock_60',
         'price_70',
+        'stock_70',
         'price_80',
+        'stock_80',
         'price_90',
+        'stock_90',
         'stock',
         'image_path'
     ];

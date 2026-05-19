@@ -83,7 +83,7 @@
           >
             <!-- Header del formulario -->
             <div class="form__header">
-              <h3 class="form__title">Envíanos un mensaje</h3>
+              <h3 class="form__title">Consulta sobre tu pedido</h3>
               <p class="form__sub">Te responderemos en menos de 24 horas hábiles.</p>
             </div>
 
@@ -236,7 +236,7 @@ const INFO = [
   },
   {
     label: 'Email',
-    value: 'ventas@reyroses.com',
+    value: 'reyruses@gmail.com',
     icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="1.6"
              stroke-linecap="round" stroke-linejoin="round">
@@ -246,7 +246,7 @@ const INFO = [
   },
   {
     label: 'Teléfono',
-    value: '+593 2 123 4567',
+    value: '+51 983 015 624',
     icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="1.6"
              stroke-linecap="round" stroke-linejoin="round">

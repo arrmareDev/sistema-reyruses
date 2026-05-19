@@ -1,47 +1,49 @@
-/* =========================================
-   REY ROSES — Design System v3
-   Paleta: Blanco limpio + Naranja #D4830A
-   ========================================= */
-
 /* ─────────────────────────────────────────
-   TOKENS DE DISEÑO
+   TOKENS DE DISEÑO (Actualizado para el nuevo Look & Feel)
    ───────────────────────────────────────── */
 :root {
 
-  /* Naranja — color de marca */
-  --or:  #D4830A;
-  --or2: #E8960F;  /* hover */
-  --or3: #F5B040;  /* soft */
-  --orb: #FEF0D5;  /* background tint */
-  --orl: #FFF5E6;  /* background ultra-light */
+  /* Acentos y Botones — Dorado Viejo */
+  --or:  #B0905D;  /* Color principal (botones, textos resaltados) */
+  --or2: #94794C;  /* hover más oscuro */
+  --or3: #CBB48B;  /* soft / opaco */
+  --orb: rgba(176, 144, 93, 0.15); /* background tint sutil */
+  --orl: rgba(176, 144, 93, 0.05); /* background ultra-light */
 
-  /* Negros */
-  --bk:  #111111;
-  --bk2: #222222;
+  /* Verde Profundo — Para el bloque principal del Hero */
+  --green-dark: #233425; 
 
-  /* Blancos / fondos */
-  --wh:  #FFFFFF;
-  --wh2: #FAFAFA;
-  --wh3: #F5F3EF;
+  /* Negros (suavizados para que no contrasten tan duro con el crema) */
+  --bk:  #2C2C2C;
+  --bk2: #404040;
+
+  /* Fondos — Cremas elegantes */
+  --wh:  #FAF8F5; /* Fondo principal de la web */
+  --wh2: #F3EFE9; /* Secciones secundarias */
+  --wh3: #EAE3D9; /* Detalles / bordes sutiles */
+  --wh-pure: #FFFFFF; /* Blanco puro para barras como la de estadísticas */
 
   /* Grises */
-  --gr:  #6B6560;  /* texto secundario */
-  --gr2: #9E9890;  /* texto muted */
-  --gr3: #E8E3DC;  /* bordes */
+  --gr:  #75706B;  /* texto secundario */
+  --gr2: #A39E98;  /* texto muted */
+  --gr3: #D1CCC6;  /* bordes */
 
   /* Tipografía */
+  /* Mantienes Playfair Display que es perfecta para la nueva propuesta */
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body:    'DM Sans', 'Helvetica Neue', sans-serif;
 
   /* Escala tipográfica */
-  --text-xs:   0.75rem;   /*  12px */
-  --text-sm:   0.875rem;  /*  14px */
-  --text-base: 1rem;      /*  16px */
-  --text-lg:   1.125rem;  /*  18px */
-  --text-xl:   1.375rem;  /*  22px */
-  --text-2xl:  1.75rem;   /*  28px */
-  --text-3xl:  2.5rem;    /*  40px */
-  --text-4xl:  3.5rem;    /*  56px */
+  --text-xs:   0.75rem;   /* 12px */
+  --text-sm:   0.875rem;  /* 14px */
+  --text-base: 1rem;      /* 16px */
+  --text-lg:   1.125rem;  /* 18px */
+  --text-xl:   1.375rem;  /* 22px */
+  --text-2xl:  1.75rem;   /* 28px */
+  --text-3xl:  2.5rem;    /* 40px */
+  --text-4xl:  3.5rem;    /* 56px */
+  /* Nueva medida súper grande para el título del Hero */
+  --text-5xl:  4.5rem;    /* 72px */ 
 
   /* Pesos */
   --weight-light:   300;
@@ -52,8 +54,8 @@
   --weight-black:   900;
 
   /* Espaciado */
-  --space-1:  0.25rem;   /*  4px */
-  --space-2:  0.5rem;    /*  8px */
+  --space-1:  0.25rem;   /* 4px */
+  --space-2:  0.5rem;    /* 8px */
   --space-3:  0.75rem;   /* 12px */
   --space-4:  1rem;      /* 16px */
   --space-6:  1.5rem;    /* 24px */
@@ -67,14 +69,17 @@
   --radius-sm:   3px;
   --radius-md:   6px;
   --radius-lg:   8px;
-  --radius-xl:   16px;   /* nuevo — usado en formularios */
+  --radius-xl:   16px;   /* usado en formularios o contenedores */
   --radius-full: 9999px;
 
   /* Sombras */
-  --shadow-sm: 0 2px 8px   rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 6px 24px  rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
-  --shadow-or: 0 4px 16px  rgba(212, 131, 10, 0.28);
+  --shadow-sm: 0 2px 8px   rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 6px 24px  rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08);
+  /* Sombra para el botón dorado */
+  --shadow-or: 0 4px 16px  rgba(176, 144, 93, 0.28); 
+  /* Sombra pesada para el bloque verde flotante */
+  --shadow-heavy: 0 20px 60px rgba(0, 0, 0, 0.2);
 
   /* Transiciones */
   --transition-fast: 150ms ease;
@@ -84,7 +89,7 @@
   /* Layout */
   --container-max: 1600px;
   --container-pad: clamp(1.25rem, 5vw, 3rem);
-  --header-h:      64px;
+  --header-h:      80px; /* Aumenté un poco el alto del header para el nuevo logo */
 }
 
 /* ─────────────────────────────────────────

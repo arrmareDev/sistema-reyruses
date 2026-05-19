@@ -25,3 +25,8 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Ignorar configuraciones de Docker locales
+reyroses-api/docker-compose.yml
+admin-reyroses/docker-compose.yml
+docker-compose.yml

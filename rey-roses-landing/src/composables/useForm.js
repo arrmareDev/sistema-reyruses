@@ -115,7 +115,7 @@ export function useForm() {
       const data = getSanitizedData();
       
       // 2. Definimos el número destino (Solo números. Ej: 51 para Perú)
-      const numeroWhatsApp = "51927571431"; // <-- COLOCA AQUÍ EL NÚMERO DE REY ROSES
+      const numeroWhatsApp = "51983015624"; // <-- COLOCA AQUÍ EL NÚMERO DE REY ROSES
 
       // 3. Construimos el mensaje de forma elegante usando los datos
       const textoMensaje = `¡Hola Rey Roses! 🌹 Me interesa hacer un pedido.\n\n` +

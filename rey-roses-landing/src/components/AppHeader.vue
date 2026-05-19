@@ -10,7 +10,7 @@
         <!-- Logo como imagen -->
         <a href="#inicio" class="header__logo" aria-label="REY ROSES — Ir al inicio">
           <img src="/images/logo.png" alt="REY ROSES — Productora y Distribuidora de Rosas Ecuatorianas"
-            class="header__logo-img" width="160" height="48" loading="eager" decoding="async" fetchpriority="high" />
+            class="header__logo-img"  loading="eager" decoding="async" fetchpriority="high" />
         </a>
 
         <!-- Navegación desktop -->
@@ -48,7 +48,7 @@
         aria-label="Menú de navegación">
         <!-- Logo dentro del menú mobile -->
         <div class="mobile__header">
-          <img src="/images/logo.png" alt="REY ROSES" class="mobile__logo" width="140" height="42" loading="lazy"
+          <img src="/images/logo.png" alt="REY ROSES" class="mobile__logo"  loading="lazy"
             decoding="async" aria-hidden="true" />
         </div>
 
@@ -216,12 +216,7 @@ onUnmounted(() => {
 }
 
 .header__logo-img {
-  /*
-    height fijo para que el logo tenga tamaño consistente
-    independientemente del aspect-ratio del archivo.
-    width: auto mantiene las proporciones originales.
-  */
-  height: 40px;
+  height: 120px;
   width: auto;
   /* object-fit por si el contenedor tiene dimensiones fijas */
   object-fit: contain;
@@ -396,7 +391,7 @@ onUnmounted(() => {
 }
 
 .mobile__logo {
-  height: 52px;
+  height: 80px;
   /* un poco más grande dentro del menú */
   width: auto;
   object-fit: contain;

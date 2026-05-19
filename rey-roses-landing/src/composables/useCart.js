@@ -5,11 +5,18 @@ const cart = ref([]);
 
 export function useCart() {
   
-  const addToCart = (product) => {
+const addToCart = (product) => {
     const existingItem = cart.value.find(item => item.id === product.id);
+    
     if (existingItem) {
+      // EL FRENO MAESTRO: Verificamos si ya alcanzó el máximo disponible
+      if (existingItem.quantity >= existingItem.max_stock) {
+        console.warn('Límite de stock alcanzado, no se puede agregar más.');
+        return; // Detiene la función y no suma el +1
+      }
       existingItem.quantity += 1;
     } else {
+      // Si es nuevo, lo agrega al carrito asegurando que empieza en 1
       cart.value.push({ ...product, quantity: 1 });
     }
   };
@@ -85,7 +92,7 @@ const sendWhatsAppOrder = async (customer) => {
     }
 
     // 3. GENERAMOS EL MENSAJE DE WHATSAPP (Se envía aunque falle la BD)
-    const numeroWhatsApp = "51902311904"; 
+    const numeroWhatsApp = "51983015624"; 
     let textoMensaje = `¡Hola Rey Roses! 🌹 Me gustaría realizar el siguiente pedido:\n\n`;
     
     textoMensaje += `*Datos de Envío:*\n`;
