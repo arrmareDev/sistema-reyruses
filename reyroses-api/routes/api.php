@@ -1,9 +1,10 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductController;
-use App\Http\Controllers\Api\OrderController; // <-- Aquí está tu controlador
+use App\Http\Controllers\Api\OrderController;
 
 // --- RUTAS PÚBLICAS (Cualquiera las puede ver o usar) ---
 
@@ -14,7 +15,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 
-// NUEVO: Ruta pública para que la Landing guarde el pedido silenciosamente
+// Ruta pública para que la Landing guarde el pedido silenciosamente
 Route::post('/orders', [OrderController::class, 'store']);
 
 
@@ -27,8 +28,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/products/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 
-    //Ruta protegida para que el panel de administrador lea todos los pedidos
+    // Ruta protegida para que el panel de administrador lea todos los pedidos
     Route::get('/orders', [OrderController::class, 'index']);
-    //ruta para actualizar el estado del pedido
+
+    // Ruta para actualizar el estado del pedido
     Route::put('/orders/{id}/status', [OrderController::class, 'updateStatus']);
+
+    // NUEVO: Ruta para guardar el Token de Firebase del administrador
+Route::post('/save-fcm-token', function (Request $request) {
+    $request->validate([
+        'fcm_token' => 'required|string'  // 👈 cambiar 'token' por 'fcm_token'
+    ]);
+
+    $request->user()->update([
+        'fcm_token' => $request->fcm_token  // 👈 igual aquí
+    ]);
+
+    return response()->json([
+        'message' => 'Token guardado con éxito.'
+    ]);
+});
 });

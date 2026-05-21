@@ -5,9 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\Product; // <-- ¡MUY IMPORTANTE! Agregamos el modelo Product
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -19,6 +23,7 @@ class OrderController extends Controller
     }
 
     // Función para crear un pedido (Para la Landing Page)
+// Función para crear un pedido (Para la Landing Page)
     public function store(Request $request)
     {
         $request->validate([
@@ -42,25 +47,55 @@ class OrderController extends Controller
 
             // 2. Guardar los Detalles del pedido (las rosas)
             foreach ($request->items as $item) {
-
                 // Vue manda el ID como "12-50" (ID-Tallo). Extraemos el ID real (12).
                 $realProductId = explode('-', $item['id'])[0];
 
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $realProductId,
-                    'product_name' => $item['name'], // Viene como "Rosa Explorer (50cm)"
+                    'product_name' => $item['name'],
                     'price' => $item['price'],
                     'quantity' => $item['quantity'],
                 ]);
             }
 
+try {
+                // Buscamos al primer administrador que tenga un token válido
+                $admin = User::whereNotNull('fcm_token')->first();
+
+                if ($admin && $admin->fcm_token) {
+                    $messaging = app('firebase.messaging');
+
+                    // Armamos el contenido visual de la notificación
+                    $notification = Notification::create(
+                        '¡Nuevo Pedido Ingresado! 🌹',
+                        'Cliente: ' . $order->customer_name . ' | Total: S/ ' . $order->total_amount
+                    );
+
+                    // Preparamos el mensaje dirigido al celular/PC del admin (Sintaxis actualizada)
+                    $message = CloudMessage::new()
+                                ->withToken($admin->fcm_token)
+                                ->withNotification($notification);
+
+                    // Enviamos la alerta a los servidores de Google
+                    $messaging->send($message);
+                }
+            } catch (\Throwable $e) {
+                // Si Firebase explota, lo anotamos pero NO detenemos la compra
+                Log::error('Error enviando notificación Push de FCM: ' . $e->getMessage());
+            }
+
             DB::commit();
             return response()->json(['message' => 'Pedido guardado con éxito'], 201);
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) { // <--- CAMBIO CLAVE AQUÍ (\Throwable)
             DB::rollBack();
-            return response()->json(['error' => 'Error al guardar el pedido'], 500);
+            // ¡AHORA LARAVEL NOS DIRÁ QUÉ SALIÓ MAL EXACTAMENTE!
+            return response()->json([
+                'error' => 'Error al guardar el pedido',
+                'detalle' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
         }
     }
 

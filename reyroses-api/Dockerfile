@@ -1,4 +1,4 @@
-FROM php:8.2-apache
+FROM php:8.3-apache
 
 # Habilitar el módulo de reescritura de URL (vital para Laravel)
 RUN a2enmod rewrite

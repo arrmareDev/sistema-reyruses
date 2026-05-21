@@ -119,6 +119,7 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
+import { requestForToken } from '@/firebase'
 
 // --- TEMA ---
 const isDarkTheme = ref(true)
@@ -141,21 +142,31 @@ const handleLogin = async () => {
   try {
     const response = await axios.post(
       import.meta.env.VITE_API_URL + '/api/login',
-      {
-        email: form.value.email,
-        password: form.value.password,
-      },
-      {
-        headers: { Accept: 'application/json' },
-      },
+      { email: form.value.email, password: form.value.password },
+      { headers: { Accept: 'application/json' } },
     )
-
-    console.log('Exito!', response.data)
-    toast.success('Bienvenido al panel, ' + response.data.user.name + '!')
 
     localStorage.setItem('auth_token', response.data.token)
 
+    // 👇 Obtener y guardar el token FCM automáticamente al iniciar sesión
+    try {
+      const fcmToken = await requestForToken()
+      if (fcmToken) {
+        await axios.post(
+          import.meta.env.VITE_API_URL + '/api/save-fcm-token',
+          { fcm_token: fcmToken },
+          { headers: { Authorization: `Bearer ${response.data.token}` } }
+        )
+        console.log('Token FCM actualizado en BD')
+      }
+    } catch (fcmError) {
+      // Si falla FCM no bloqueamos el login
+      console.warn('No se pudo actualizar el token FCM:', fcmError)
+    }
+
+    toast.success('Bienvenido al panel, ' + response.data.user.name + '!')
     router.push('/dashboard')
+
   } catch (error) {
     errorMessage.value = 'Credenciales incorrectas o error de conexion.'
     console.error(error)

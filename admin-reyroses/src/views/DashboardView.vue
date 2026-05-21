@@ -1,13 +1,11 @@
 <template>
   <div :class="['flex h-screen font-sans overflow-hidden relative transition-colors duration-300', isDarkTheme ? 'bg-[#0f0f12]' : 'bg-gray-100']">
-    <!-- Overlay móvil -->
     <div
       v-if="isMobileMenuOpen"
       @click="isMobileMenuOpen = false"
       :class="['fixed inset-0 z-40 md:hidden backdrop-blur-sm transition-opacity', isDarkTheme ? 'bg-black/70' : 'bg-black/50']"
     ></div>
 
-    <!-- Sidebar mejorado -->
     <aside
       :class="[
         'w-72 text-white flex flex-col shadow-2xl z-50 absolute inset-y-0 left-0 transform transition-all duration-300 ease-in-out md:relative md:translate-x-0',
@@ -15,7 +13,6 @@
         isDarkTheme ? 'bg-[#16161a] border-r border-[#2a2a32]' : 'bg-white border-r border-gray-200'
       ]"
     >
-      <!-- Logo -->
       <div :class="['p-6 relative', isDarkTheme ? 'border-b border-[#2a2a32]' : 'border-b border-gray-200']">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center">
@@ -38,7 +35,6 @@
         </button>
       </div>
 
-      <!-- Navegación -->
       <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
         <p :class="['text-[10px] font-semibold uppercase tracking-widest mb-4 px-3', isDarkTheme ? 'text-zinc-600' : 'text-gray-400']">
           Módulos
@@ -101,7 +97,6 @@
         </button>
       </nav>
 
-      <!-- Usuario -->
       <div :class="['p-4', isDarkTheme ? 'border-t border-[#2a2a32]' : 'border-t border-gray-200']">
         <div :class="['flex items-center gap-3 p-3 rounded-xl mb-3', isDarkTheme ? 'bg-[#1e1e24]' : 'bg-gray-100']">
           <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-sm font-bold text-white">
@@ -112,24 +107,33 @@
             <p :class="['text-xs truncate', isDarkTheme ? 'text-zinc-500' : 'text-gray-500']">admin@reyroses.com</p>
           </div>
         </div>
-<button
-  @click="handleLogout"
-  class="w-full py-2.5 text-xs font-medium text-zinc-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all flex items-center justify-center gap-2"
->
-  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-  </svg>
-  Cerrar sesión
-</button>
+
+        <button
+          @click="enableNotifications"
+          class="w-full py-2.5 mb-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all flex items-center justify-center gap-2 shadow-md shadow-blue-500/20"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
+          Activar Alertas
+        </button>
+
+        <button
+          @click="handleLogout"
+          class="w-full py-2.5 text-xs font-medium text-zinc-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all flex items-center justify-center gap-2"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          Cerrar sesión
+        </button>
       </div>
     </aside>
 
-    <!-- MÓDULO CATÁLOGO -->
     <main
       v-if="currentModule === 'catalogo'"
       class="flex-1 flex flex-col h-screen overflow-hidden relative"
     >
-      <!-- Header -->
       <header :class="['px-4 md:px-8 py-5 flex flex-col md:flex-row justify-between items-start md:items-center z-10 gap-4', isDarkTheme ? 'bg-[#16161a] border-b border-[#2a2a32]' : 'bg-white border-b border-gray-200']">
         <div class="flex items-center w-full md:w-auto">
           <button
@@ -160,21 +164,34 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
-          <!-- Toggle tema -->
+
+          <button
+            @click="toggleSound"
+            :class="['p-2.5 rounded-xl transition-all', isDarkTheme ? 'bg-[#1e1e24] text-zinc-400 hover:bg-[#2a2a32] hover:text-white border border-[#2a2a32]' : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900 border border-gray-200']"
+            :title="isSoundEnabled ? 'Silenciar alertas' : 'Activar sonido'"
+          >
+            <svg v-if="isSoundEnabled" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5 10v4a2 2 0 002 2h3l5 5V3l-5 5H7a2 2 0 00-2 2z" />
+            </svg>
+            <svg v-else class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h2.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+            </svg>
+          </button>
+
           <button
             @click="toggleTheme"
             :class="['p-2.5 rounded-xl transition-all', isDarkTheme ? 'bg-[#1e1e24] text-zinc-400 hover:bg-[#2a2a32] hover:text-white border border-[#2a2a32]' : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900 border border-gray-200']"
             :title="isDarkTheme ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'"
           >
-            <!-- Sol (tema claro) -->
             <svg v-if="isDarkTheme" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
-            <!-- Luna (tema oscuro) -->
             <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
             </svg>
           </button>
+
           <button
             @click="fetchProducts"
             :class="['p-2.5 rounded-xl transition-all', isDarkTheme ? 'bg-[#1e1e24] text-zinc-400 hover:bg-[#2a2a32] hover:text-white border border-[#2a2a32]' : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900 border border-gray-200']"
@@ -183,6 +200,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
           </button>
+
           <button
             @click="openCreateModal"
             class="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2"
@@ -195,7 +213,6 @@
         </div>
       </header>
 
-      <!-- Tabs -->
       <div :class="['px-4 md:px-8 pt-4 flex gap-1 overflow-x-auto', isDarkTheme ? 'bg-[#16161a] border-b border-[#2a2a32]' : 'bg-white border-b border-gray-200']">
         <button
           v-for="tab in ['Todas', 'Rosas', 'Garden', 'Tinted']"
@@ -212,7 +229,6 @@
         </button>
       </div>
 
-      <!-- Grid de productos -->
       <div class="flex-1 overflow-y-auto p-4 md:p-8">
         <div v-if="filteredProducts.length === 0" class="text-center py-20">
           <div :class="['w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4', isDarkTheme ? 'bg-[#1e1e24]' : 'bg-gray-100']">
@@ -230,7 +246,6 @@
             :key="product.id"
             :class="['rounded-2xl border transition-all group overflow-hidden', isDarkTheme ? 'bg-[#16161a] border-[#2a2a32] hover:border-[#3a3a42]' : 'bg-white border-gray-200 hover:border-gray-300 hover:shadow-lg']"
           >
-            <!-- Imagen del producto -->
             <div :class="['relative h-40 overflow-hidden', isDarkTheme ? 'bg-[#1e1e24]' : 'bg-gray-100']">
               <img
                 v-if="product.image_path"
@@ -242,7 +257,6 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
-              <!-- Badge de stock -->
               <span
                 :class="[
                   'absolute top-3 right-3 text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-sm',
@@ -257,7 +271,6 @@
               </span>
             </div>
 
-            <!-- Info del producto -->
             <div class="p-4">
               <div class="flex items-start justify-between gap-2 mb-2">
                 <div>
@@ -306,7 +319,6 @@
       </div>
     </main>
 
-    <!-- MÓDULO PEDIDOS -->
     <main
       v-if="currentModule === 'pedidos'"
       class="flex-1 flex flex-col h-screen overflow-hidden relative"
@@ -329,7 +341,21 @@
           </div>
         </div>
         <div class="flex items-center gap-3">
-          <!-- Toggle tema -->
+
+          <button
+            @click="toggleSound"
+            :class="['p-2.5 rounded-xl transition-all', isDarkTheme ? 'bg-[#1e1e24] text-zinc-400 hover:bg-[#2a2a32] hover:text-white border border-[#2a2a32]' : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900 border border-gray-200']"
+            :title="isSoundEnabled ? 'Silenciar alertas' : 'Activar sonido'"
+          >
+            <svg v-if="isSoundEnabled" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5 10v4a2 2 0 002 2h3l5 5V3l-5 5H7a2 2 0 00-2 2z" />
+            </svg>
+            <svg v-else class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h2.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+            </svg>
+          </button>
+
           <button
             @click="toggleTheme"
             :class="['p-2.5 rounded-xl transition-all', isDarkTheme ? 'bg-[#1e1e24] text-zinc-400 hover:bg-[#2a2a32] hover:text-white border border-[#2a2a32]' : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900 border border-gray-200']"
@@ -342,6 +368,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
             </svg>
           </button>
+
           <button
             @click="fetchOrders"
             :class="['p-2.5 rounded-xl transition-all flex items-center gap-2', isDarkTheme ? 'bg-[#1e1e24] text-zinc-400 hover:bg-[#2a2a32] hover:text-white border border-[#2a2a32]' : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900 border border-gray-200']"
@@ -354,7 +381,6 @@
         </div>
       </header>
 
-      <!-- Tabs de estado -->
       <div :class="['px-4 md:px-8 pt-4 flex gap-1 overflow-x-auto', isDarkTheme ? 'bg-[#16161a] border-b border-[#2a2a32]' : 'bg-white border-b border-gray-200']">
         <button
           v-for="statusTab in ['Todos', 'Pendiente', 'Pagado', 'Cancelado']"
@@ -371,7 +397,6 @@
         </button>
       </div>
 
-      <!-- Tabla de pedidos -->
       <div class="flex-1 overflow-y-auto p-4 md:p-8">
         <div :class="['rounded-2xl border overflow-hidden', isDarkTheme ? 'bg-[#16161a] border-[#2a2a32]' : 'bg-white border-gray-200']">
           <div class="overflow-x-auto">
@@ -469,7 +494,6 @@
       </div>
     </main>
 
-    <!-- MODAL: Crear/Editar Producto -->
     <div
       v-if="showModal"
       :class="['fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 transition-all p-4', isDarkTheme ? 'bg-black/70' : 'bg-black/50']"
@@ -548,8 +572,6 @@
             </div>
           </div>
 
-
-
           <div :class="['flex justify-end gap-3 mt-8 pt-4 border-t', isDarkTheme ? 'border-[#2a2a32]' : 'border-gray-200']">
             <button
               type="button"
@@ -569,7 +591,6 @@
       </div>
     </div>
 
-    <!-- MODAL: Detalle de Pedido -->
     <div
       v-if="showOrderModal"
       :class="['fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 transition-all p-4', isDarkTheme ? 'bg-black/70' : 'bg-black/50']"
@@ -625,7 +646,6 @@
       </div>
     </div>
 
-    <!-- MODAL: Confirmar cambio de estado -->
     <div
       v-if="showStatusConfirmModal"
       :class="['fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 transition-all p-4', isDarkTheme ? 'bg-black/70' : 'bg-black/50']"
@@ -672,7 +692,6 @@
       </div>
     </div>
 
-    <!-- MODAL: Confirmar eliminacion -->
     <div
       v-if="showDeleteModal"
       :class="['fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 transition-all p-4', isDarkTheme ? 'bg-black/70' : 'bg-black/50']"
@@ -714,10 +733,27 @@ import axios from 'axios'
 import { toast } from 'vue-sonner'
 import { useRouter } from 'vue-router'
 
+// NUEVOS IMPORTS DE FIREBASE (Asegúrate de que la ruta coincida con tu archivo firebase.js)
+import { requestForToken, onMessageListener } from '@/firebase'
+
 const apiUrl = import.meta.env.VITE_API_URL;
 
 // --- TEMA ---
 const isDarkTheme = ref(true)
+
+// --- CONTROL DE SONIDO ---
+const isSoundEnabled = ref(true)
+
+const toggleSound = () => {
+  isSoundEnabled.value = !isSoundEnabled.value
+  localStorage.setItem('soundEnabled', isSoundEnabled.value ? 'true' : 'false')
+
+  if (isSoundEnabled.value) {
+    toast.success('Sonido de alertas activado', { duration: 2000 })
+  } else {
+    toast.info('Alertas silenciadas', { duration: 2000 })
+  }
+}
 
 const toggleTheme = () => {
   isDarkTheme.value = !isDarkTheme.value
@@ -761,6 +797,31 @@ const selectedOrder = ref(null)
 const showStatusConfirmModal = ref(false)
 const pendingStatusUpdate = ref({ id: null, status: '' })
 
+// --- LÓGICA DE NOTIFICACIONES PUSH (FIREBASE) ---
+const fcmToken = ref('');
+
+const enableNotifications = async () => {
+  try {
+    const token = await requestForToken();
+
+    if (token) {
+      fcmToken.value = token;
+
+      // 👇 Usar la ruta que ya existe en tu api.php
+      await axios.post(`${apiUrl}/api/save-fcm-token`,
+        { fcm_token: token },
+        { headers: getAuthHeaders() }
+      );
+
+      toast.success("¡Notificaciones activadas correctamente!");
+    } else {
+      toast.error("No diste permiso o hubo un error al generar el token.");
+    }
+  } catch (error) {
+    console.error("Error activando notificaciones:", error);
+    toast.error("Ocurrió un problema al activar las notificaciones.");
+  }
+};
 // --- AUTENTICACIÓN ---
 const getAuthHeaders = () => {
   const token = localStorage.getItem('auth_token')
@@ -772,11 +833,9 @@ const router = useRouter()
 
 const handleLogout = async () => {
   try {
-    // 1. Recuperamos el token para mandarlo en la cabecera (ajusta el nombre si lo guardaste diferente)
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('auth_token')
 
     if (token) {
-      // 2. Le decimos a Laravel que invalide este token por seguridad
       await axios.post(`${import.meta.env.VITE_API_URL}/api/logout`, {}, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -786,14 +845,12 @@ const handleLogout = async () => {
   } catch (error) {
     console.error('Error al cerrar sesión en el servidor:', error)
   } finally {
-    // 3. Pase lo que pase con el servidor, limpiamos la sesión local
-    localStorage.removeItem('token')
-    localStorage.removeItem('user') // Si estás guardando los datos del usuario, bórralos también
-
-    // 4. Redirigimos a la vista de login (ajusta la ruta si se llama diferente)
+    localStorage.removeItem('auth_token')
+    localStorage.removeItem('user')
     router.push('/')
   }
 }
+
 // --- LÓGICA DE NAVEGACIÓN ---
 const switchModule = (module) => {
   currentModule.value = module
@@ -866,7 +923,6 @@ const saveProduct = async () => {
     const formData = new FormData()
     formData.append('category_id', newProduct.value.category_id)
     formData.append('name', newProduct.value.name)
-    // Ya no mandamos el stock general viejo
 
     formData.append('price_50', newProduct.value.price_50)
     formData.append('stock_50', newProduct.value.stock_50)
@@ -993,11 +1049,48 @@ const executeOrderStatusUpdate = async () => {
 }
 
 onMounted(() => {
-  // Cargar tema guardado
+  // 1. Cargar tema guardado
   const savedTheme = localStorage.getItem('theme')
   if (savedTheme) {
     isDarkTheme.value = savedTheme === 'dark'
   }
+
+  // Cargar preferencia de sonido guardada en caché
+  const savedSound = localStorage.getItem('soundEnabled')
+  if (savedSound !== null) {
+    isSoundEnabled.value = savedSound === 'true'
+  }
+
+  // 2. Cargar los productos para que vuelva a aparecer tu inventario
   fetchProducts()
+
+  // 3. Iniciar la escucha continua de Firebase (SIN .then)
+  try {
+    onMessageListener((payload) => {
+      console.log("¡Pedido recibido en tiempo real!", payload);
+
+      // Intentar reproducir el sonido SOLO si no está muteado
+      if (isSoundEnabled.value) {
+        try {
+          const audio = new Audio('/alert.mp3');
+          audio.play();
+        } catch (audioError) {
+          console.warn("El navegador bloqueó el sonido hasta que interactúes con la página:", audioError);
+        }
+      }
+
+      // Mostrar la alerta visual
+      toast.success(`🔔 NUEVO PEDIDO: ${payload.notification?.title || 'Ingreso'} - ${payload.notification?.body || ''}`, {
+        duration: 10000
+      });
+
+      // Recargar automáticamente la lista si estás en pedidos
+      if (currentModule.value === 'pedidos') {
+        fetchOrders();
+      }
+    });
+  } catch (err) {
+    console.error("Error al configurar el escuchador de Firebase:", err);
+  }
 })
 </script>
