@@ -122,7 +122,7 @@
       <p v-else class="cart-empty">Aún no has agregado variedades.</p>
     </div>
 
-    <form @submit.prevent="handleCheckout" class="cart-summary" v-if="cart.length > 0">
+      <form @submit.prevent="handleCheckout" class="cart-summary" v-if="cart.length > 0">
       
       <div class="cart-summary__total">
         <span>Total a Pagar:</span>
@@ -131,15 +131,28 @@
 
       <div class="cart-summary__fields">
         <p class="cart-summary__title">Datos de Envío</p>
-        <input v-model="customer.name" type="text" placeholder="Nombre completo" required />
-        <input v-model="customer.phone" type="tel" placeholder="Celular de contacto" required />
-        <input v-model="customer.address" type="text" placeholder="Dirección de entrega" required />
+        <input v-model="customer.name" type="text" placeholder="Nombre completo *" required />
+        
+        <input 
+          v-model="customer.phone" 
+          type="tel" 
+          maxlength="9"
+          placeholder="Celular de contacto *" 
+          @input="filtrarNumeros"
+          required 
+        />
+        
+        <input v-model="customer.address" type="text" placeholder="Dirección de entrega *" required />
       </div>
 
-      <button type="submit" class="cart-panel__send">
+      <button 
+        type="submit" 
+        class="cart-panel__send"
+        :disabled="!customer.name || customer.phone.length !== 9 || !customer.address"
+      >
         Enviar Pedido por WhatsApp
       </button>
-    </form>
+    </form> 
   </aside>
 
 <div v-if="showStemModal && activeProduct" class="stem-modal-overlay" @click.self="showStemModal = false">
@@ -241,6 +254,13 @@ const customer = ref({
   phone: '',
   address: ''
 })
+
+const filtrarNumeros = (event) => {
+  let valorLimpio = event.target.value.replace(/\D/g, '');
+  customer.value.phone = valorLimpio.slice(0, 9);
+}
+
+
 
 const handleCheckout = () => {
   sendWhatsAppOrder(customer.value)
@@ -1286,5 +1306,11 @@ const CATEGORIES = [
     right: 1.5rem;
     font-size: 1.2rem;
   }
+}
+/* Estilo para el botón verde cuando está deshabilitado */
+.cart-panel__send:disabled {
+  background: #9ca3af; /* Color gris */
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 </style>
