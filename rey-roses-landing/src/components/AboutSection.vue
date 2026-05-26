@@ -16,10 +16,10 @@
         <div class="about__img-shade" aria-hidden="true"></div>
       </figure>
 
-      <!-- Chip: años de experiencia -->
-      <div class="about__chip" aria-label="Más de 5 años de experiencia">
+      <!-- Chip: meses de experiencia -->
+      <div class="about__chip" aria-label="Más de 4 meses de experiencia">
         <strong class="chip__num">15<span aria-hidden="true">+</span></strong>
-        <span class="chip__label">Años cultivando</span>
+        <span class="chip__label">Meses cultivando</span>
       </div>
     </div>
 
@@ -37,14 +37,13 @@
 
       <!-- Lead -->
       <p class="about__lead" data-reveal>
-        Desde los Andes ecuatorianos en Ecuador hasta los hogares y negocios más
-        exigentes de Perú, REY RUSES cultiva y distribuye rosas que transmiten
-        emociones auténticas. Nuestra cadena de producción y logística asegura que
-        cada flor conserve su frescura y belleza al llegar a destino. Hoy, nuestras
-        rosas llegan a todo Chiclayo, llevando consigo la esencia de la tierra
-        andina y el compromiso con la calidad que nos distingue. No entregamos
-        simples flores — compartimos experiencias que acompañan momentos únicos y
-        memorables.
+REY RUSES nace con el compromiso de ofrecer rosas ecuatorianas de exportación con los más altos estándares de calidad. 
+Importamos directamente desde Cayambe, Ecuador, una de las zonas florícolas más reconocidas del mundo, para garantizar flores frescas, elegantes y listas para cualquier ocasión.
+Trabajamos desde producción y distribución para mantener la frescura y presentación de cada rosa desde los Andes ecuatorianos hasta Chiclayo. 
+Hoy abastecemos florerías, eventos, negocios y clientes con atención personalizada y stock constante.
+
+No entregamos solo rosas.
+Entregamos presentación, frescura y confianza en cada pedido.
       </p>
 
       <!-- Estadísticas -->
@@ -111,9 +110,9 @@ onMounted(() => revealAll(sectionRef.value))
 
 // ── Datos ────────────────────────────────────────────────────────────────────
 const STATS = [
-  { value: '100%', label: 'Pedidos personalizados' },
+  { value: '100%', label: 'Rosas frescas de exportación' },
   { value: '100%', label: 'Cobertura en Chiclayo' },
-  { value: '20+',  label: 'Variedades exclusivas' },
+  { value: '50+',  label: 'Variedades disponibles' },
   { value: '100%', label: 'Calidad garantizada'  },
 ]
 

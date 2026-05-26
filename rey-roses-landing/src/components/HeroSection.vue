@@ -25,9 +25,10 @@
         </h1>
 
         <p class="hero__sub animate-fade-in-up" style="animation-delay: .42s">
-          Cultivadas a 2.800 metros de altitud en los Andes ecuatorianos. 
-          Luz solar intensa, tierra volcánica y el secreto de la naturaleza 
-          hacen nuestras rosas incomparables.
+          Importamos y distribuimos rosas ecuatorianas de calidad premium, 
+          reconocidas por sus tallos largos, colores intensos y gran duración. 
+          Desde los Andes ecuatorianos hasta Chiclayo, 
+          llevamos frescura y excelencia para florerías, eventos y negocios florales.
         </p>
 
         <nav class="hero__btns animate-fade-in-up" style="animation-delay: .54s" aria-label="Acciones principales">
@@ -57,9 +58,9 @@
 
 <script setup>
 const stats = [
-  { value: '5+', label: 'Años de experiencia' },
-  { value: '200+', label: 'Variedades de rosa' },
-  { value: '40+', label: 'Países exportados' },
+  { value: '4+', label: 'Meses de experiencia' },
+  { value: '50+', label: 'Variedades de rosa' },
+  { value: '60-90cm', label: 'Tallos exportados' },
 ]
 </script>
 

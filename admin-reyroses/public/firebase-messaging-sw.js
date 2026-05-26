@@ -15,14 +15,13 @@ const firebaseConfig = {
 try {
   firebase.initializeApp(firebaseConfig);
   const messaging = firebase.messaging();
-
   messaging.onBackgroundMessage(function(payload) {
     console.log("¡Mensaje recibido en segundo plano!", payload);
     const notificationTitle = payload.notification?.title || "Nuevo Pedido";
     const notificationOptions = {
       body: payload.notification?.body || "Tienes una nueva alerta en el sistema.",
-      icon: "/favicon.ico",
-      badge: "/favicon.ico"
+      icon: "/icon-192x192.png",
+      badge: "/icon-192x192.png"
     };
 
     self.registration.showNotification(notificationTitle, notificationOptions);
