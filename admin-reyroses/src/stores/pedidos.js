@@ -42,5 +42,26 @@ export const usePedidosStore = defineStore('pedidos', () => {
     }
   }
 
-  return { orders, loading, fetchOrders, updateStatus, marcarPagado }
+  /**
+   * Crea un pedido manualmente desde el panel (ventas por teléfono/WhatsApp, crédito, etc.)
+   */
+  async function crearPedido(payload) {
+    try {
+      await api.post('/orders', payload)
+      toast.success('Pedido registrado con éxito')
+      await fetchOrders()
+      return true
+    } catch (error) {
+      console.error('Error al crear el pedido:', error)
+      if (error.response?.data?.errors) {
+        const mensajes = Object.values(error.response.data.errors).flat().join(' | ')
+        toast.error('Revisa los datos: ' + mensajes)
+      } else {
+        toast.error('No se pudo registrar el pedido')
+      }
+      return false
+    }
+  }
+
+  return { orders, loading, fetchOrders, updateStatus, marcarPagado, crearPedido }
 })

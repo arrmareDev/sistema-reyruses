@@ -7,6 +7,7 @@ export function emptyProductForm() {
   return {
     name: '',
     category_id: '',
+    tipo: 'Nacional',
     price_50: '',
     stock_50: 0,
     price_60: '',

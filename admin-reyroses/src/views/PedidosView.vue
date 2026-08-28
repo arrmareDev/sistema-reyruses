@@ -8,11 +8,18 @@
           {{ filteredOrders.length }} en vista actual
         </p>
       </div>
-      <button @click="pedidosStore.fetchOrders"
-        :class="['p-2.5 rounded-xl transition-all flex items-center gap-2', isDarkTheme ? 'bg-[#1e1e24] text-zinc-400 hover:bg-[#2a2a32] hover:text-white border border-[#2a2a32]' : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900 border border-gray-200']">
-        <RefreshCw class="w-5 h-5" :stroke-width="2" />
-        <span class="hidden md:inline font-medium text-sm">Actualizar</span>
-      </button>
+      <div class="flex gap-2">
+        <button @click="pedidosStore.fetchOrders"
+          :class="['p-2.5 rounded-xl transition-all flex items-center gap-2', isDarkTheme ? 'bg-[#1e1e24] text-zinc-400 hover:bg-[#2a2a32] hover:text-white border border-[#2a2a32]' : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900 border border-gray-200']">
+          <RefreshCw class="w-5 h-5" :stroke-width="2" />
+          <span class="hidden md:inline font-medium text-sm">Actualizar</span>
+        </button>
+        <button @click="showCrearPedido = true"
+          class="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2">
+          <Plus class="w-4 h-4" :stroke-width="2" />
+          Nuevo pedido
+        </button>
+      </div>
     </header>
 
     <div
@@ -121,6 +128,8 @@
 
     <OrderDetailModal v-model="showOrderModal" :order="selectedOrder" @marcar-pagado="handleMarcarPagado" />
 
+    <CrearPedidoModal v-model="showCrearPedido" />
+
     <ConfirmModal v-model="showStatusConfirm" title="Confirmar accion"
       :message="`Vas a marcar este pedido como ${pendingStatusUpdate.status}. Esta accion no se puede deshacer.`"
       confirm-label="Confirmar" :danger-variant="pendingStatusUpdate.status === 'Cancelado'"
@@ -130,10 +139,11 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { RefreshCw, Eye, Check, X } from 'lucide-vue-next'
+import { RefreshCw, Eye, Check, X, Plus } from 'lucide-vue-next'
 import { useTheme } from '@/composables/useTheme'
 import { usePedidosStore } from '@/stores/pedidos'
 import OrderDetailModal from '@/components/pedidos/OrderDetailModal.vue'
+import CrearPedidoModal from '@/components/pedidos/CrearPedidoModal.vue'
 import ConfirmModal from '@/components/shared/ConfirmModal.vue'
 
 const { isDarkTheme } = useTheme()
@@ -143,6 +153,7 @@ const activeOrderTab = ref('Todos')
 
 const showOrderModal = ref(false)
 const selectedOrder = ref(null)
+const showCrearPedido = ref(false)
 
 const showStatusConfirm = ref(false)
 const pendingStatusUpdate = ref({ id: null, status: '' })

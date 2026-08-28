@@ -31,8 +31,13 @@
           <div v-for="tabaco in compra.tabacos" :key="tabaco.id"
             :class="['p-4 rounded-xl border', isDarkTheme ? 'bg-[#1e1e24] border-[#2a2a32]' : 'bg-gray-50 border-gray-200']">
             <div class="flex justify-between items-center mb-2">
-              <span :class="['font-semibold text-sm', isDarkTheme ? 'text-white' : 'text-gray-900']">{{
-                tabaco.product?.name }}</span>
+              <span :class="['font-semibold text-sm', isDarkTheme ? 'text-white' : 'text-gray-900']">
+                {{ tabaco.product?.name }}
+                <span
+                  :class="['text-[10px] font-bold px-1.5 py-0.5 rounded ml-1', tabaco.product?.tipo === 'Exportacion' ? 'bg-blue-500/20 text-blue-400' : 'bg-purple-500/20 text-purple-400']">
+                  {{ tabaco.product?.tipo === 'Exportacion' ? 'Exportación' : 'Nacional' }}
+                </span>
+              </span>
               <span :class="['text-xs', isDarkTheme ? 'text-zinc-500' : 'text-gray-500']">US$ {{ tabaco.costo_tabaco_usd
                 }}</span>
             </div>

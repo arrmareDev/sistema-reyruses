@@ -16,16 +16,28 @@
         </div>
 
         <form @submit.prevent="handleSubmit" class="space-y-5">
-          <div>
-            <label
-              :class="['block text-xs font-semibold uppercase tracking-wide mb-2', isDarkTheme ? 'text-zinc-500' : 'text-gray-500']">Categoria</label>
-            <select v-model="form.category_id" required
-              :class="['w-full px-4 py-3 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 outline-none cursor-pointer', isDarkTheme ? 'bg-[#1e1e24] border border-[#2a2a32] text-white' : 'bg-gray-100 border border-gray-200 text-gray-900']">
-              <option value="" disabled>Selecciona una categoria...</option>
-              <option value="1">Rosas</option>
-              <option value="2">Garden</option>
-              <option value="3">Tinted</option>
-            </select>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                :class="['block text-xs font-semibold uppercase tracking-wide mb-2', isDarkTheme ? 'text-zinc-500' : 'text-gray-500']">Categoria</label>
+              <select v-model="form.category_id" required
+                :class="['w-full px-4 py-3 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 outline-none cursor-pointer', isDarkTheme ? 'bg-[#1e1e24] border border-[#2a2a32] text-white' : 'bg-gray-100 border border-gray-200 text-gray-900']">
+                <option value="" disabled>Selecciona...</option>
+                <option value="1">Rosas</option>
+                <option value="2">Garden</option>
+                <option value="3">Tinted</option>
+              </select>
+            </div>
+
+            <div>
+              <label
+                :class="['block text-xs font-semibold uppercase tracking-wide mb-2', isDarkTheme ? 'text-zinc-500' : 'text-gray-500']">Tipo</label>
+              <select v-model="form.tipo" required
+                :class="['w-full px-4 py-3 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 outline-none cursor-pointer', isDarkTheme ? 'bg-[#1e1e24] border border-[#2a2a32] text-white' : 'bg-gray-100 border border-gray-200 text-gray-900']">
+                <option value="Nacional">Nacional</option>
+                <option value="Exportacion">Exportación</option>
+              </select>
+            </div>
           </div>
 
           <div>
@@ -116,6 +128,7 @@ watch(
       form.value = {
         name: p.name,
         category_id: p.category_id,
+        tipo: p.tipo || 'Nacional',
         price_50: p.price_50, stock_50: p.stock_50 || 0,
         price_60: p.price_60, stock_60: p.stock_60 || 0,
         price_70: p.price_70, stock_70: p.stock_70 || 0,

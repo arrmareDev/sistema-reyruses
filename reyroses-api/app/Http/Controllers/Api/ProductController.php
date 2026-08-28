@@ -21,6 +21,7 @@ class ProductController extends Controller
     {
         $request->validate([
             'category_id' => 'required|exists:categories,id',
+            'tipo' => 'required|in:Nacional,Exportacion',
             'name' => 'required|string|max:255',
 
             'price' => 'nullable|numeric',
@@ -68,6 +69,7 @@ class ProductController extends Controller
 
         $request->validate([
             'category_id' => 'required|exists:categories,id',
+            'tipo' => 'required|in:Nacional,Exportacion',
             'name' => 'required|string|max:255',
 
             'price' => 'nullable|numeric',

@@ -27,8 +27,12 @@
             {{ product.name }}
           </h3>
           <p
-            :class="['text-[11px] font-medium uppercase tracking-wider mt-1', isDarkTheme ? 'text-zinc-500' : 'text-gray-500']">
+            :class="['text-[11px] font-medium uppercase tracking-wider mt-1 flex items-center gap-1.5', isDarkTheme ? 'text-zinc-500' : 'text-gray-500']">
             {{ product.category ? product.category.name : 'Sin categoría' }}
+            <span
+              :class="['px-1.5 py-0.5 rounded text-[9px] font-bold', product.tipo === 'Exportacion' ? 'bg-blue-500/20 text-blue-400' : 'bg-purple-500/20 text-purple-400']">
+              {{ product.tipo === 'Exportacion' ? 'Exportación' : 'Nacional' }}
+            </span>
           </p>
         </div>
       </div>
