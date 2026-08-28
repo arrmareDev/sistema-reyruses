@@ -1,0 +1,89 @@
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
+import { toast } from 'vue-sonner'
+import api from '@/lib/api'
+
+export function emptyProductForm() {
+  return {
+    name: '',
+    category_id: '',
+    price_50: '',
+    stock_50: 0,
+    price_60: '',
+    stock_60: 0,
+    price_70: '',
+    stock_70: 0,
+    price_80: '',
+    stock_80: 0,
+    price_90: '',
+    stock_90: 0,
+  }
+}
+
+export const useCatalogoStore = defineStore('catalogo', () => {
+  const products = ref([])
+  const loading = ref(false)
+
+  async function fetchProducts() {
+    loading.value = true
+    try {
+      const response = await api.get('/products')
+      products.value = response.data
+    } catch (error) {
+      console.error('Error conectando con la base de datos:', error)
+      toast.error('No se pudo cargar el catálogo')
+    } finally {
+      loading.value = false
+    }
+  }
+
+  /**
+   * Crea o actualiza un producto. Devuelve true si se guardó bien
+   * (para que el componente sepa si cerrar el modal o dejarlo abierto).
+   */
+  async function saveProduct(formPayload, imageFile, editingId) {
+    const formData = new FormData()
+    Object.entries(formPayload).forEach(([key, value]) => formData.append(key, value))
+    if (imageFile) formData.append('image', imageFile)
+
+    try {
+      if (editingId) {
+        formData.append('_method', 'PUT')
+        await api.post(`/products/${editingId}`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
+        toast.success('Variedad actualizada correctamente')
+      } else {
+        await api.post('/products', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
+        toast.success('Nueva variedad agregada al catálogo')
+      }
+
+      await fetchProducts()
+      return true
+    } catch (error) {
+      console.error('Error al guardar:', error)
+      if (error.response?.data?.errors) {
+        const mensajes = Object.values(error.response.data.errors).flat().join(' | ')
+        toast.error('Revisa los datos: ' + mensajes)
+      } else {
+        toast.error('Ocurrió un error inesperado al guardar.')
+      }
+      return false
+    }
+  }
+
+  async function deleteProduct(product) {
+    try {
+      await api.delete(`/products/${product.id}`)
+      toast.success(`La variedad "${product.name}" fue eliminada`)
+      await fetchProducts()
+    } catch (error) {
+      console.error('Error al eliminar:', error)
+      toast.error('No se pudo eliminar el producto')
+    }
+  }
+
+  return { products, loading, fetchProducts, saveProduct, deleteProduct }
+})

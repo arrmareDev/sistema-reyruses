@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
-import DashboardView from '../views/DashboardView.vue' // Importamos el dashboard
+import AdminLayout from '../layouts/AdminLayout.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -9,32 +9,53 @@ const router = createRouter({
       path: '/',
       name: 'login',
       component: LoginView,
-      // Indicamos que esta ruta es para usuarios NO logueados
-      meta: { requiresGuest: true }
+      meta: { requiresGuest: true },
     },
     {
       path: '/dashboard',
-      name: 'dashboard',
-      component: DashboardView, // Creamos la nueva ruta
-      // Indicamos que esta ruta requiere sesión iniciada
-      meta: { requiresAuth: true }
+      component: AdminLayout,
+      meta: { requiresAuth: true },
+      redirect: { name: 'catalogo' },
+      children: [
+        {
+          path: 'catalogo',
+          name: 'catalogo',
+          component: () => import('../views/CatalogoView.vue'),
+        },
+        {
+          path: 'pedidos',
+          name: 'pedidos',
+          component: () => import('../views/PedidosView.vue'),
+        },
+        // {
+        //   path: 'compras',
+        //   name: 'compras',
+        //   component: () => import('../views/ComprasView.vue'),
+        // },
+        // {
+        //   path: 'caja',
+        //   name: 'caja',
+        //   component: () => import('../views/CajaView.vue'),
+        // },
+        // {
+        //   path: 'inversion',
+        //   name: 'inversion',
+        //   component: () => import('../views/InversionView.vue'),
+        // },
+      ],
     },
   ],
 })
 
 // === GUARDIA DE SEGURIDAD (NAVIGATION GUARD) ===
 router.beforeEach((to, from, next) => {
-  // Buscamos el token que guardaste al hacer login
-  const isAuthenticated = localStorage.getItem('auth_token')
+  const isAuthenticated = !!localStorage.getItem('auth_token')
 
   if (to.meta.requiresAuth && !isAuthenticated) {
-    // Si la ruta requiere auth y no hay token, lo pateamos al login
     next({ name: 'login' })
   } else if (to.meta.requiresGuest && isAuthenticated) {
-    // Si intenta ir al login pero ya está autenticado, lo mandamos al dashboard
-    next({ name: 'dashboard' })
+    next({ name: 'catalogo' })
   } else {
-    // Si todo está correcto, lo dejamos pasar
     next()
   }
 })

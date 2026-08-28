@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\CompraController;
+use App\Http\Controllers\Api\CajaController;
 
 // --- RUTAS PÚBLICAS (Cualquiera las puede ver o usar) ---
 
@@ -34,18 +36,38 @@ Route::middleware('auth:sanctum')->group(function () {
     // Ruta para actualizar el estado del pedido
     Route::put('/orders/{id}/status', [OrderController::class, 'updateStatus']);
 
-    // NUEVO: Ruta para guardar el Token de Firebase del administrador
-Route::post('/save-fcm-token', function (Request $request) {
-    $request->validate([
-        'fcm_token' => 'required|string'  // 👈 cambiar 'token' por 'fcm_token'
-    ]);
+    // Cerrar sesión (revoca el token actual)
+    Route::post('/logout', function (Request $request) {
+        $request->user()->currentAccessToken()->delete();
 
-    $request->user()->update([
-        'fcm_token' => $request->fcm_token  // 👈 igual aquí
-    ]);
+        return response()->json(['message' => 'Sesión cerrada correctamente']);
+    });
 
-    return response()->json([
-        'message' => 'Token guardado con éxito.'
-    ]);
-});
+    // --- Compras (tabacos desde Ecuador) ---
+    Route::get('/compras', [CompraController::class, 'index']);
+    Route::post('/compras', [CompraController::class, 'store']);
+    Route::get('/compras/{id}', [CompraController::class, 'show']);
+    Route::put('/compras/{id}', [CompraController::class, 'update']);
+    Route::delete('/compras/{id}', [CompraController::class, 'destroy']);
+    Route::post('/compras/{id}/recibir', [CompraController::class, 'recibir']);
+
+    // --- Caja ---
+    Route::get('/caja/movimientos', [CajaController::class, 'movimientos']);
+    Route::post('/caja/movimientos', [CajaController::class, 'guardarMovimiento']);
+    Route::get('/caja/arqueos', [CajaController::class, 'arqueos']);
+    Route::post('/caja/arqueos', [CajaController::class, 'guardarArqueo']);
+
+    Route::post('/save-fcm-token', function (Request $request) {
+        $request->validate([
+            'fcm_token' => 'required|string'
+        ]);
+
+        $request->user()->update([
+            'fcm_token' => $request->fcm_token
+        ]);
+
+        return response()->json([
+            'message' => 'Token guardado con éxito.'
+        ]);
+    });
 });
