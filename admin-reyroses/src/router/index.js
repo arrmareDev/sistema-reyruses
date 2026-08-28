@@ -53,15 +53,14 @@ const router = createRouter({
 })
 
 // === GUARDIA DE SEGURIDAD (NAVIGATION GUARD) ===
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
   const isAuthenticated = !!localStorage.getItem('auth_token')
 
   if (to.meta.requiresAuth && !isAuthenticated) {
-    next({ name: 'login' })
-  } else if (to.meta.requiresGuest && isAuthenticated) {
-    next({ name: 'catalogo' })
-  } else {
-    next()
+    return { name: 'login' }
+  }
+  if (to.meta.requiresGuest && isAuthenticated) {
+    return { name: 'catalogo' }
   }
 })
 

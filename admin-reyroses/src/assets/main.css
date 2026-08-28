@@ -1,4 +1,60 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 @import 'tailwindcss';
+
+/*
+  Sistema de diseño Rey Ruses — admin panel
+  ------------------------------------------
+  Tipografía: Plus Jakarta Sans (interfaz) + IBM Plex Mono (cifras).
+  Los números financieros y de stock SIEMPRE van en mono con tabular-nums:
+  es el detalle que hace que las tablas de precios/stock se alineen
+  perfectamente y se lean como un producto financiero serio, no una demo.
+
+  Color: en vez de un solo acento genérico hicimos un sistema semántico —
+  brass (marca / acciones principales), pine (positivo: ganancia, pagado,
+  stock ok), brick (negativo: pérdida, cancelado, eliminar). Así "acción
+  principal" y "dinero a favor" nunca se confunden visualmente.
+*/
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Neutros oscuros — negro cálido, no gris frío ni negro puro */
+  --color-ink-950: #131019;
+  --color-ink-900: #1d1922;
+  --color-ink-800: #262130;
+  --color-ink-700: #322c3b;
+  --color-ink-600: #453e51;
+
+  /* Marca: dorado latón — nace de "Rey" (rey/realeza), acciones principales */
+  --color-brass-400: #c9a752;
+  --color-brass-500: #b08d3e;
+  --color-brass-600: #93731f;
+
+  /* Positivo financiero: verde pino, deliberadamente distinto de brass */
+  --color-pine-400: #5fa37d;
+  --color-pine-500: #3c7a5c;
+  --color-pine-600: #2c5c44;
+
+  /* Negativo / peligro: rojo ladrillo, no rojo alarma genérico */
+  --color-brick-400: #d4726c;
+  --color-brick-500: #b5433d;
+  --color-brick-600: #8f332e;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Cifras financieras y de stock: mono + alineación tabular en toda la app */
+.font-mono,
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Foco visible por teclado — accesibilidad, no decoración */
+:focus-visible {
+  outline: 2px solid var(--color-brass-500);
+  outline-offset: 2px;
+}

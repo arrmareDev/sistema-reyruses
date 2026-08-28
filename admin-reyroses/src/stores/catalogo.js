@@ -23,6 +23,7 @@ export function emptyProductForm() {
 
 export const useCatalogoStore = defineStore('catalogo', () => {
   const products = ref([])
+  const categories = ref([])
   const loading = ref(false)
 
   async function fetchProducts() {
@@ -35,6 +36,55 @@ export const useCatalogoStore = defineStore('catalogo', () => {
       toast.error('No se pudo cargar el catálogo')
     } finally {
       loading.value = false
+    }
+  }
+
+  async function fetchCategories() {
+    try {
+      const response = await api.get('/categories')
+      categories.value = response.data
+    } catch (error) {
+      console.error('Error cargando categorías:', error)
+      toast.error('No se pudieron cargar las categorías')
+    }
+  }
+
+  async function createCategory(name) {
+    try {
+      await api.post('/categories', { name })
+      toast.success('Categoría creada con éxito')
+      await fetchCategories()
+      return true
+    } catch (error) {
+      console.error('Error al crear categoría:', error)
+      toast.error(error.response?.data?.message || 'No se pudo crear la categoría')
+      return false
+    }
+  }
+
+  async function updateCategory(id, name) {
+    try {
+      await api.put(`/categories/${id}`, { name })
+      toast.success('Categoría actualizada')
+      await fetchCategories()
+      return true
+    } catch (error) {
+      console.error('Error al actualizar categoría:', error)
+      toast.error(error.response?.data?.message || 'No se pudo actualizar la categoría')
+      return false
+    }
+  }
+
+  async function deleteCategory(id) {
+    try {
+      await api.delete(`/categories/${id}`)
+      toast.success('Categoría eliminada')
+      await fetchCategories()
+      return true
+    } catch (error) {
+      console.error('Error al eliminar categoría:', error)
+      toast.error(error.response?.data?.message || 'No se pudo eliminar la categoría')
+      return false
     }
   }
 
@@ -86,5 +136,16 @@ export const useCatalogoStore = defineStore('catalogo', () => {
     }
   }
 
-  return { products, loading, fetchProducts, saveProduct, deleteProduct }
+  return {
+    products,
+    categories,
+    loading,
+    fetchProducts,
+    fetchCategories,
+    createCategory,
+    updateCategory,
+    deleteCategory,
+    saveProduct,
+    deleteProduct,
+  }
 })

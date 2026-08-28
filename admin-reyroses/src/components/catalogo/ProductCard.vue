@@ -1,19 +1,19 @@
 <template>
   <div
-    :class="['rounded-2xl border transition-all group overflow-hidden', isDarkTheme ? 'bg-[#16161a] border-[#2a2a32] hover:border-[#3a3a42]' : 'bg-white border-gray-200 hover:border-gray-300 hover:shadow-lg']">
-    <div :class="['relative h-40 overflow-hidden', isDarkTheme ? 'bg-[#1e1e24]' : 'bg-gray-100']">
+    :class="['rounded-2xl border transition-all group overflow-hidden', isDarkTheme ? 'bg-ink-900 border-ink-700 hover:border-ink-600' : 'bg-white border-gray-200 hover:border-gray-300 hover:shadow-lg']">
+    <div :class="['relative h-40 overflow-hidden', isDarkTheme ? 'bg-ink-800' : 'bg-gray-100']">
       <img v-if="product.image_path" :src="apiUrl + '/storage/' + product.image_path"
         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
       <div v-else class="w-full h-full flex items-center justify-center">
-        <ImageOff :class="['w-12 h-12', isDarkTheme ? 'text-zinc-700' : 'text-gray-300']" :stroke-width="1.5" />
+        <ImageOff :class="['w-12 h-12', isDarkTheme ? 'text-ink-700' : 'text-gray-300']" :stroke-width="1.5" />
       </div>
       <span :class="[
-        'absolute top-3 right-3 text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-sm',
+        'absolute top-3 right-3 text-[10px] font-bold font-mono tabular-nums px-2.5 py-1 rounded-full backdrop-blur-sm',
         product.stock > 5
-          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+          ? 'bg-pine-500/20 text-pine-400 border border-pine-500/30'
           : product.stock > 0
             ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-            : 'bg-red-500/20 text-red-400 border border-red-500/30',
+            : 'bg-brick-500/20 text-brick-400 border border-brick-500/30',
       ]">
         Stock: {{ product.stock }}
       </span>
@@ -27,35 +27,35 @@
             {{ product.name }}
           </h3>
           <p
-            :class="['text-[11px] font-medium uppercase tracking-wider mt-1 flex items-center gap-1.5', isDarkTheme ? 'text-zinc-500' : 'text-gray-500']">
+            :class="['text-[11px] font-medium uppercase tracking-wider mt-1 flex items-center gap-1.5', isDarkTheme ? 'text-ink-600' : 'text-gray-500']">
             {{ product.category ? product.category.name : 'Sin categoría' }}
             <span
-              :class="['px-1.5 py-0.5 rounded text-[9px] font-bold', product.tipo === 'Exportacion' ? 'bg-blue-500/20 text-blue-400' : 'bg-purple-500/20 text-purple-400']">
+              :class="['px-1.5 py-0.5 rounded text-[9px] font-bold', product.tipo === 'Exportacion' ? 'bg-blue-500/20 text-blue-400' : 'bg-brass-500/20 text-brass-400']">
               {{ product.tipo === 'Exportacion' ? 'Exportación' : 'Nacional' }}
             </span>
           </p>
         </div>
       </div>
 
-      <p :class="['text-xs line-clamp-2 mb-4 min-h-[32px]', isDarkTheme ? 'text-zinc-500' : 'text-gray-500']">
+      <p :class="['text-xs line-clamp-2 mb-4 min-h-[32px]', isDarkTheme ? 'text-ink-600' : 'text-gray-500']">
         {{ product.description || 'Sin descripción detallada.' }}
       </p>
 
       <div
-        :class="['flex items-end justify-between pt-3 border-t', isDarkTheme ? 'border-[#2a2a32]' : 'border-gray-100']">
+        :class="['flex items-end justify-between pt-3 border-t', isDarkTheme ? 'border-ink-700' : 'border-gray-100']">
         <div>
           <span
-            :class="['text-[10px] font-medium uppercase', isDarkTheme ? 'text-zinc-600' : 'text-gray-400']">Desde</span>
-          <p class="text-xl font-bold text-emerald-500">S/ {{ product.price_50 || '0.00' }}</p>
+            :class="['text-[10px] font-medium uppercase', isDarkTheme ? 'text-ink-600' : 'text-gray-400']">Desde</span>
+          <p class="text-xl font-bold font-mono tabular-nums text-pine-500">S/ {{ product.price_50 || '0.00' }}</p>
         </div>
         <div class="flex gap-2">
           <button @click="$emit('edit', product)"
-            :class="['p-2 rounded-lg transition-all', isDarkTheme ? 'bg-[#1e1e24] text-zinc-400 hover:bg-[#2a2a32] hover:text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900']"
+            :class="['p-2 rounded-lg transition-all', isDarkTheme ? 'bg-ink-800 text-ink-600 hover:bg-ink-700 hover:text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900']"
             title="Editar">
             <Pencil class="w-4 h-4" :stroke-width="2" />
           </button>
           <button @click="$emit('delete', product)"
-            class="p-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500 hover:text-white transition-all"
+            class="p-2 bg-brick-500/10 text-brick-400 rounded-lg hover:bg-brick-500 hover:text-white transition-all"
             title="Eliminar">
             <Trash2 class="w-4 h-4" :stroke-width="2" />
           </button>

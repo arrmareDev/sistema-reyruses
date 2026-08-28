@@ -19,7 +19,6 @@
           <div>
             <h2 :class="['text-lg font-bold tracking-wide', isDarkTheme ? 'text-white' : 'text-gray-900']">Rey Ruses
             </h2>
-            <p :class="['text-xs', isDarkTheme ? 'text-zinc-500' : 'text-gray-500']">Panel Admin</p>
           </div>
         </div>
         <button @click="isMobileMenuOpen = false"

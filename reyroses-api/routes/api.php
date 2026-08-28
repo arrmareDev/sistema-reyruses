@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\CompraController;
 use App\Http\Controllers\Api\CajaController;
 use App\Http\Controllers\Api\InversionController;
+use App\Http\Controllers\Api\CategoryController;
 
 // --- RUTAS PÚBLICAS (Cualquiera las puede ver o usar) ---
 
@@ -17,6 +18,9 @@ Route::post('/login', [AuthController::class, 'login']);
 // Ver productos (Esto es lo que usará tu Landing Page)
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
+
+// Ver categorías (para los selects del panel y de la landing)
+Route::get('/categories', [CategoryController::class, 'index']);
 
 // Ruta pública para que la Landing guarde el pedido silenciosamente
 Route::post('/orders', [OrderController::class, 'store']);
@@ -30,6 +34,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/products', [ProductController::class, 'store']);
     Route::put('/products/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+
+    // Gestión de categorías (crear/editar/eliminar)
+    Route::post('/categories', [CategoryController::class, 'store']);
+    Route::put('/categories/{id}', [CategoryController::class, 'update']);
+    Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
     // Ruta protegida para que el panel de administrador lea todos los pedidos
     Route::get('/orders', [OrderController::class, 'index']);
