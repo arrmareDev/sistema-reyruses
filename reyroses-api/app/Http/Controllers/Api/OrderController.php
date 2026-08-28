@@ -16,10 +16,41 @@ use Illuminate\Support\Facades\Log;
 class OrderController extends Controller
 {
     // Función para ver los pedidos (Para el Panel Admin)
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::with('items')->orderBy('created_at', 'desc')->get();
-        return response()->json($orders);
+        $esFiltroCredito = $request->tipo_pago === 'Credito' && $request->estado_pago === 'Pendiente';
+
+        $query = Order::with('items');
+
+        // Cuentas por Cobrar quiere ver primero lo más urgente (fecha límite más próxima)
+        if ($esFiltroCredito) {
+            $query->orderBy('fecha_limite_pago', 'asc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        // Filtros opcionales: usados por la vista de Cuentas por Cobrar
+        // (tipo_pago=Credito&estado_pago=Pendiente) y por las pestañas de Pedidos (status).
+        if ($request->filled('tipo_pago')) {
+            $query->where('tipo_pago', $request->tipo_pago);
+        }
+        if ($request->filled('estado_pago')) {
+            $query->where('estado_pago', $request->estado_pago);
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // La suma tiene que ser de TODAS las filas que matchean el filtro,
+        // no solo de la página actual de 12 — por eso se calcula antes de paginar.
+        $sumQuery = clone $query;
+        $paginated = $query->paginate(12)->toArray();
+
+        if ($esFiltroCredito) {
+            $paginated['total_pendiente'] = (float) $sumQuery->sum('total_amount');
+        }
+
+        return response()->json($paginated);
     }
 
     // Función para crear un pedido (Landing Page o panel admin)
@@ -97,7 +128,7 @@ class OrderController extends Controller
             }
 
             DB::commit();
-            return response()->json(['message' => 'Pedido guardado con éxito'], 201);
+            return response()->json(['message' => 'Pedido guardado con éxito', 'order' => $order], 201);
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([
@@ -185,5 +216,28 @@ class OrderController extends Controller
         $order->marcarComoPagado();
 
         return response()->json(['message' => 'Venta marcada como pagada', 'order' => $order->fresh()]);
+    }
+
+    /**
+     * Sube (o reemplaza) el voucher de pago de un pedido.
+     * Pública a propósito: la landing también debe poder usarla sin login.
+     */
+    public function uploadVoucher(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+
+        $request->validate([
+            'voucher' => 'required|file|mimes:jpg,jpeg,png,webp,pdf|max:5120',
+        ]);
+
+        // Si ya tenía uno, lo reemplazamos sin dejar basura en el disco
+        if ($order->voucher_path) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($order->voucher_path);
+        }
+
+        $path = $request->file('voucher')->store('vouchers', 'public');
+        $order->update(['voucher_path' => $path]);
+
+        return response()->json(['message' => 'Voucher subido con éxito', 'order' => $order->fresh()]);
     }
 }

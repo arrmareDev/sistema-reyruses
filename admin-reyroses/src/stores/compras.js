@@ -29,11 +29,22 @@ export const useComprasStore = defineStore('compras', () => {
   const compras = ref([])
   const loading = ref(false)
 
-  async function fetchCompras() {
+  const currentPage = ref(1)
+  const lastPage = ref(1)
+  const from = ref(0)
+  const to = ref(0)
+  const total = ref(0)
+
+  async function fetchCompras(page = 1) {
     loading.value = true
     try {
-      const response = await api.get('/compras')
-      compras.value = response.data
+      const response = await api.get('/compras', { params: { page } })
+      compras.value = response.data.data
+      currentPage.value = response.data.current_page
+      lastPage.value = response.data.last_page
+      from.value = response.data.from || 0
+      to.value = response.data.to || 0
+      total.value = response.data.total
     } catch (error) {
       console.error('Error cargando compras:', error)
       toast.error('No se pudieron cargar las compras')
@@ -67,7 +78,8 @@ export const useComprasStore = defineStore('compras', () => {
     try {
       await api.post('/compras', payload)
       toast.success('Compra registrada con éxito')
-      await fetchCompras()
+      // Va a la página 1: la compra nueva aparece primero (ordenado por fecha)
+      await fetchCompras(1)
       return true
     } catch (error) {
       console.error('Error al registrar la compra:', error)
@@ -90,7 +102,7 @@ export const useComprasStore = defineStore('compras', () => {
     try {
       await api.put(`/compras/${id}`, data)
       toast.success('Compra actualizada correctamente')
-      await fetchCompras()
+      await fetchCompras(currentPage.value)
       return true
     } catch (error) {
       console.error('Error al actualizar la compra:', error)
@@ -103,7 +115,7 @@ export const useComprasStore = defineStore('compras', () => {
     try {
       await api.post(`/compras/${id}/recibir`)
       toast.success('Compra recibida: stock del catálogo actualizado')
-      await fetchCompras()
+      await fetchCompras(currentPage.value)
     } catch (error) {
       console.error('Error al recibir la compra:', error)
       toast.error(error.response?.data?.message || 'No se pudo marcar la compra como recibida')
@@ -114,12 +126,25 @@ export const useComprasStore = defineStore('compras', () => {
     try {
       await api.delete(`/compras/${id}`)
       toast.success('Compra eliminada')
-      await fetchCompras()
+      await fetchCompras(currentPage.value)
     } catch (error) {
       console.error('Error al eliminar la compra:', error)
       toast.error(error.response?.data?.message || 'No se pudo eliminar la compra')
     }
   }
 
-  return { compras, loading, fetchCompras, createCompra, updateCompra, recibirCompra, deleteCompra }
+  return {
+    compras,
+    loading,
+    currentPage,
+    lastPage,
+    from,
+    to,
+    total,
+    fetchCompras,
+    createCompra,
+    updateCompra,
+    recibirCompra,
+    deleteCompra,
+  }
 })

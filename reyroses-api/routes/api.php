@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\CompraController;
 use App\Http\Controllers\Api\CajaController;
 use App\Http\Controllers\Api\InversionController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\InventarioController;
 
 // --- RUTAS PÚBLICAS (Cualquiera las puede ver o usar) ---
 
@@ -24,6 +25,10 @@ Route::get('/categories', [CategoryController::class, 'index']);
 
 // Ruta pública para que la Landing guarde el pedido silenciosamente
 Route::post('/orders', [OrderController::class, 'store']);
+
+// Subir el voucher de pago — pública también, para que el cliente pueda
+// adjuntarlo desde la landing sin necesitar una sesión de admin
+Route::post('/orders/{id}/voucher', [OrderController::class, 'uploadVoucher']);
 
 
 // --- RUTAS PROTEGIDAS (Solo el admin con Token puede entrar) ---
@@ -73,6 +78,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // --- Fondo de inversión ---
     Route::get('/inversion', [InversionController::class, 'index']);
     Route::post('/inversion', [InversionController::class, 'store']);
+
+    // --- Inventario (ajustes manuales de stock) ---
+    Route::get('/inventario', [InventarioController::class, 'index']);
+    Route::post('/inventario', [InventarioController::class, 'store']);
 
     Route::post('/save-fcm-token', function (Request $request) {
         $request->validate([

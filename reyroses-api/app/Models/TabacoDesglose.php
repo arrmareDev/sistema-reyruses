@@ -11,18 +11,11 @@ class TabacoDesglose extends Model
 
     protected $table = 'tabaco_desglose';
 
-    protected $fillable = [
-        'tabaco_id',
-        'tallo',
-        'cantidad_paquetes',
-    ];
+    protected $fillable = ['tabaco_id', 'tallo', 'cantidad_paquetes'];
 
     protected function casts(): array
     {
-        return [
-            'tallo' => 'integer',
-            'cantidad_paquetes' => 'integer',
-        ];
+        return ['tallo' => 'integer', 'cantidad_paquetes' => 'integer'];
     }
 
     public function tabaco()

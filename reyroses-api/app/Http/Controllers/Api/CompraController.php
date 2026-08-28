@@ -13,7 +13,7 @@ class CompraController extends Controller
     {
         $compras = Compra::with('tabacos.desglose', 'tabacos.product')
             ->orderBy('fecha', 'desc')
-            ->get();
+            ->paginate(12);
 
         return response()->json($compras);
     }

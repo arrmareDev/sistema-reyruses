@@ -31,11 +31,15 @@
   --color-brass-600: #93731f;
 
   /* Positivo financiero: verde pino, deliberadamente distinto de brass */
+  --color-pine-50: #f0f7f3;
+  --color-pine-100: #dbeee3;
   --color-pine-400: #5fa37d;
   --color-pine-500: #3c7a5c;
   --color-pine-600: #2c5c44;
 
   /* Negativo / peligro: rojo ladrillo, no rojo alarma genérico */
+  --color-brick-50: #fbf1f0;
+  --color-brick-100: #f5dcda;
   --color-brick-400: #d4726c;
   --color-brick-500: #b5433d;
   --color-brick-600: #8f332e;

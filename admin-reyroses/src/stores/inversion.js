@@ -7,12 +7,22 @@ export const useInversionStore = defineStore('inversion', () => {
   const movimientos = ref([])
   const saldoActual = ref(0)
   const loading = ref(false)
+  const currentPage = ref(1)
+  const lastPage = ref(1)
+  const from = ref(0)
+  const to = ref(0)
+  const total = ref(0)
 
-  async function fetchMovimientos() {
+  async function fetchMovimientos(page = 1) {
     loading.value = true
     try {
-      const response = await api.get('/inversion')
-      movimientos.value = response.data.movimientos
+      const response = await api.get('/inversion', { params: { page } })
+      movimientos.value = response.data.movimientos.data
+      currentPage.value = response.data.movimientos.current_page
+      lastPage.value = response.data.movimientos.last_page
+      from.value = response.data.movimientos.from || 0
+      to.value = response.data.movimientos.to || 0
+      total.value = response.data.movimientos.total
       saldoActual.value = response.data.saldo_actual
     } catch (error) {
       console.error('Error cargando movimientos de inversión:', error)
@@ -26,7 +36,7 @@ export const useInversionStore = defineStore('inversion', () => {
     try {
       await api.post('/inversion', data)
       toast.success('Depósito registrado con éxito')
-      await fetchMovimientos()
+      await fetchMovimientos(1)
       return true
     } catch (error) {
       console.error('Error al registrar el depósito:', error)
@@ -35,5 +45,16 @@ export const useInversionStore = defineStore('inversion', () => {
     }
   }
 
-  return { movimientos, saldoActual, loading, fetchMovimientos, depositar }
+  return {
+    movimientos,
+    saldoActual,
+    loading,
+    currentPage,
+    lastPage,
+    from,
+    to,
+    total,
+    fetchMovimientos,
+    depositar,
+  }
 })

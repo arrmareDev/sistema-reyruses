@@ -13,7 +13,7 @@ class InversionController extends Controller
         $movimientos = SaldoInversionMovimiento::with('compra')
             ->orderBy('fecha', 'desc')
             ->orderBy('id', 'desc')
-            ->get();
+            ->paginate(12);
 
         return response()->json([
             'movimientos' => $movimientos,

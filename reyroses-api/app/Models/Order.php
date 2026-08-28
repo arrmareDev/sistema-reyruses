@@ -18,6 +18,7 @@ class Order extends Model
         'tipo_pago',        // Contado | Credito
         'fecha_limite_pago', // solo si tipo_pago = Credito
         'estado_pago',      // Pagado | Pendiente
+        'voucher_path',
     ];
 
     protected function casts(): array

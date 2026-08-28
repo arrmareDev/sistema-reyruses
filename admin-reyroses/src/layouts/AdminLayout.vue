@@ -33,6 +33,7 @@
           Ventas
         </p>
         <SidebarLink to="/dashboard/catalogo" label="Catálogo" :icon="Boxes" />
+        <SidebarLink to="/dashboard/inventario" label="Inventario" :icon="Archive" />
         <SidebarLink to="/dashboard/pedidos" label="Pedidos" :icon="ClipboardList" />
 
         <p
@@ -118,7 +119,7 @@ import { useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import {
   Flower2, X, Menu, Bell, Sun, Moon, Volume2, VolumeX, LogOut,
-  Boxes, ClipboardList, Truck, PiggyBank, Wallet, HandCoins,
+  Boxes, ClipboardList, Truck, PiggyBank, Wallet, HandCoins, Archive,
 } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth'
 import { usePedidosStore } from '@/stores/pedidos'

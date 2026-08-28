@@ -11,11 +11,13 @@ class CajaController extends Controller
 {
     public function movimientos()
     {
-        $movimientos = CajaMovimiento::orderBy('fecha', 'desc')->orderBy('id', 'desc')->get();
+        $movimientos = CajaMovimiento::orderBy('fecha', 'desc')->orderBy('id', 'desc')->paginate(12);
 
         return response()->json([
             'movimientos' => $movimientos,
             'saldo_actual' => CajaMovimiento::saldoActual(),
+            'total_ingresos' => (float) CajaMovimiento::where('tipo', 'ingreso')->sum('monto'),
+            'total_egresos' => (float) CajaMovimiento::where('tipo', 'egreso')->sum('monto'),
         ]);
     }
 
@@ -39,7 +41,7 @@ class CajaController extends Controller
 
     public function arqueos()
     {
-        $arqueos = CajaArqueo::orderBy('fecha', 'desc')->orderBy('id', 'desc')->get();
+        $arqueos = CajaArqueo::orderBy('fecha', 'desc')->orderBy('id', 'desc')->paginate(12);
 
         return response()->json($arqueos);
     }
