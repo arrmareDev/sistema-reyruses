@@ -1,27 +1,33 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  # 1. BASE DE DATOS (Aislada y segura)
+  # 1. BASE DE DATOS (PostgreSQL, aislada y segura)
   reyruses_db:
-    image: mysql:8.0
+    image: postgres:17
     container_name: reyruses_db
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: reyruses_db
-      MYSQL_USER: reyruses_user
-      MYSQL_PASSWORD: reyruses_password
-      MYSQL_ROOT_PASSWORD: root_password_seguro
+      POSTGRES_DB: reyruses_db
+      POSTGRES_USER: reyruses_user
+      POSTGRES_PASSWORD: reyruses_password
     volumes:
-      - reyruses_mysql_data:/var/lib/mysql
+      - reyruses_pg_data:/var/lib/postgresql/data
     networks:
       - reyruses_net
 
   # 2. BACKEND (Laravel API)
   reyruses_api:
     build:
-      context: ./reyruses-api
+      context: ./reyroses-api
     container_name: reyruses_api
     restart: unless-stopped
+    environment:
+      DB_CONNECTION: pgsql
+      DB_HOST: reyruses_db
+      DB_PORT: 5432
+      DB_DATABASE: reyruses_db
+      DB_USERNAME: reyruses_user
+      DB_PASSWORD: reyruses_password
     ports:
       - "9000:80" # Expuesto internamente en el puerto 9000
     depends_on:
@@ -32,7 +38,7 @@ services:
   # 3. FRONTEND (Landing Page en Vue)
   reyruses_landing:
     build:
-      context: ./reyruses-landing
+      context: ./rey-roses-landing
     container_name: reyruses_landing
     restart: unless-stopped
     ports:
@@ -43,7 +49,7 @@ services:
   # 4. FRONTEND (Panel Admin en Vue)
   reyruses_admin:
     build:
-      context: ./admin-reyruses
+      context: ./admin-reyroses
     container_name: reyruses_admin
     restart: unless-stopped
     ports:
@@ -57,4 +63,4 @@ networks:
     driver: bridge
 
 volumes:
-  reyruses_mysql_data:
+  reyruses_pg_data:

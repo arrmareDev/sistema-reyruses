@@ -39,7 +39,7 @@
                 </span>
               </span>
               <span :class="['text-xs', isDarkTheme ? 'text-zinc-500' : 'text-gray-500']">US$ {{ tabaco.costo_tabaco_usd
-                }}</span>
+              }}</span>
             </div>
             <div class="flex flex-wrap gap-2">
               <span v-for="item in tabaco.desglose" :key="item.id"

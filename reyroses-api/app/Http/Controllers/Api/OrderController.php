@@ -22,8 +22,7 @@ class OrderController extends Controller
         return response()->json($orders);
     }
 
-    // Función para crear un pedido (Para la Landing Page)
-// Función para crear un pedido (Para la Landing Page)
+    // Función para crear un pedido (Landing Page o panel admin)
     public function store(Request $request)
     {
         $request->validate([
@@ -32,7 +31,11 @@ class OrderController extends Controller
             'customer.address' => 'required|string',
             'total' => 'required|numeric',
             'items' => 'required|array',
+            'tipo_pago' => 'nullable|in:Contado,Credito',
+            'fecha_limite_pago' => 'required_if:tipo_pago,Credito|nullable|date',
         ]);
+
+        $tipoPago = $request->tipo_pago ?? 'Contado';
 
         DB::beginTransaction();
         try {
@@ -43,6 +46,9 @@ class OrderController extends Controller
                 'customer_address' => $request->customer['address'],
                 'total_amount' => $request->total,
                 'status' => 'Pendiente',
+                'tipo_pago' => $tipoPago,
+                'fecha_limite_pago' => $tipoPago === 'Credito' ? $request->fecha_limite_pago : null,
+                'estado_pago' => $tipoPago === 'Credito' ? 'Pendiente' : 'Pagado',
             ]);
 
             // 2. Guardar los Detalles del pedido (las rosas)
@@ -59,7 +65,12 @@ class OrderController extends Controller
                 ]);
             }
 
-try {
+            // Si es al contado, el ingreso de caja se registra de una vez (ya está pagado)
+            if ($tipoPago === 'Contado') {
+                $order->registrarIngresoCaja();
+            }
+
+            try {
                 // Buscamos al primer administrador que tenga un token válido
                 $admin = User::whereNotNull('fcm_token')->first();
 
@@ -68,14 +79,14 @@ try {
 
                     // Armamos el contenido visual de la notificación
                     $notification = Notification::create(
-                        '¡Nuevo Pedido Ingresado! 🌹',
+                        'Nuevo Pedido Ingresado',
                         'Cliente: ' . $order->customer_name . ' | Total: S/ ' . $order->total_amount
                     );
 
-                    // Preparamos el mensaje dirigido al celular/PC del admin (Sintaxis actualizada)
+                    // Preparamos el mensaje dirigido al celular/PC del admin
                     $message = CloudMessage::new()
-                                ->withToken($admin->fcm_token)
-                                ->withNotification($notification);
+                        ->withToken($admin->fcm_token)
+                        ->withNotification($notification);
 
                     // Enviamos la alerta a los servidores de Google
                     $messaging->send($message);
@@ -87,10 +98,8 @@ try {
 
             DB::commit();
             return response()->json(['message' => 'Pedido guardado con éxito'], 201);
-
-        } catch (\Throwable $e) { // <--- CAMBIO CLAVE AQUÍ (\Throwable)
+        } catch (\Throwable $e) {
             DB::rollBack();
-            // ¡AHORA LARAVEL NOS DIRÁ QUÉ SALIÓ MAL EXACTAMENTE!
             return response()->json([
                 'error' => 'Error al guardar el pedido',
                 'detalle' => $e->getMessage(),
@@ -156,10 +165,25 @@ try {
 
             DB::commit();
             return response()->json(['message' => 'Estado y stock actualizados con éxito']);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => 'Error al actualizar el estado y stock'], 500);
         }
+    }
+
+    /**
+     * Marca una venta al crédito como pagada y registra el ingreso de caja.
+     */
+    public function marcarPagado($id)
+    {
+        $order = Order::findOrFail($id);
+
+        if (! $order->esCredito()) {
+            return response()->json(['message' => 'Esta venta no es al crédito, ya se registró como pagada.'], 422);
+        }
+
+        $order->marcarComoPagado();
+
+        return response()->json(['message' => 'Venta marcada como pagada', 'order' => $order->fresh()]);
     }
 }

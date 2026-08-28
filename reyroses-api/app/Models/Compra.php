@@ -119,8 +119,9 @@ class Compra extends Model
     }
 
     /**
-     * Marca la compra como recibida: aumenta el stock de cada Product por tallo
-     * y registra el retiro del fondo de inversión si corresponde.
+     * Marca la compra como recibida: aumenta el stock de cada Product por tallo,
+     * registra el egreso de caja por el costo total, la reposición desde el fondo
+     * de inversión si corresponde (tanto en caja como en el propio fondo).
      * No hace nada si la compra ya estaba Recibida (evita duplicar el stock).
      */
     public function recibir(): void
@@ -138,16 +139,37 @@ class Compra extends Model
                 }
             }
 
+            // Caja financia el costo total de la compra
+            $this->movimientosCaja()->create([
+                'fecha' => now()->toDateString(),
+                'tipo' => 'egreso',
+                'monto' => $this->costo_total,
+                'concepto' => 'Compra #' . $this->id . ' recibida',
+            ]);
+
             if ((float) $this->saldo_inversion_usado > 0) {
+                // El fondo de inversión repone a caja lo que puso
                 $this->movimientosInversion()->create([
                     'fecha' => now()->toDateString(),
                     'tipo' => 'retiro',
                     'monto' => $this->saldo_inversion_usado,
                     'descripcion' => 'Retiro para financiar compra #' . $this->id,
                 ]);
+
+                $this->movimientosCaja()->create([
+                    'fecha' => now()->toDateString(),
+                    'tipo' => 'ingreso',
+                    'monto' => $this->saldo_inversion_usado,
+                    'concepto' => 'Reposición fondo de inversión - Compra #' . $this->id,
+                ]);
             }
 
             $this->update(['estado' => 'Recibida']);
         });
+    }
+
+    public function movimientosCaja()
+    {
+        return $this->morphMany(CajaMovimiento::class, 'referenciable');
     }
 }

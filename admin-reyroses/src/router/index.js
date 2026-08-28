@@ -27,21 +27,26 @@ const router = createRouter({
           name: 'pedidos',
           component: () => import('../views/PedidosView.vue'),
         },
-        // {
-        //   path: 'compras',
-        //   name: 'compras',
-        //   component: () => import('../views/ComprasView.vue'),
-        // },
-        // {
-        //   path: 'caja',
-        //   name: 'caja',
-        //   component: () => import('../views/CajaView.vue'),
-        // },
-        // {
-        //   path: 'inversion',
-        //   name: 'inversion',
-        //   component: () => import('../views/InversionView.vue'),
-        // },
+        {
+          path: 'compras',
+          name: 'compras',
+          component: () => import('../views/ComprasView.vue'),
+        },
+        {
+          path: 'caja',
+          name: 'caja',
+          component: () => import('../views/CajaView.vue'),
+        },
+        {
+          path: 'cuentas-por-cobrar',
+          name: 'cuentas-por-cobrar',
+          component: () => import('../views/CuentasPorCobrarView.vue'),
+        },
+        {
+          path: 'inversion',
+          name: 'inversion',
+          component: () => import('../views/InversionView.vue'),
+        },
       ],
     },
   ],

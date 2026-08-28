@@ -38,11 +38,34 @@ class Order extends Model
         return $this->tipo_pago === 'Credito';
     }
 
+    public function movimientosCaja()
+    {
+        return $this->morphMany(CajaMovimiento::class, 'referenciable');
+    }
+
     /**
-     * Marca la venta a crédito como pagada.
+     * Registra el ingreso de caja por esta venta (una sola vez).
+     */
+    public function registrarIngresoCaja(): void
+    {
+        if ($this->movimientosCaja()->exists()) {
+            return;
+        }
+
+        $this->movimientosCaja()->create([
+            'fecha' => now()->toDateString(),
+            'tipo' => 'ingreso',
+            'monto' => $this->total_amount,
+            'concepto' => 'Venta pedido #' . $this->id,
+        ]);
+    }
+
+    /**
+     * Marca la venta a crédito como pagada y registra el ingreso de caja.
      */
     public function marcarComoPagado(): void
     {
         $this->update(['estado_pago' => 'Pagado']);
+        $this->registrarIngresoCaja();
     }
 }

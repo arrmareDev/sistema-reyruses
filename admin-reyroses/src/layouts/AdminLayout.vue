@@ -48,6 +48,7 @@
           Finanzas
         </p>
         <SidebarLink to="/dashboard/caja" label="Caja" :icon="Wallet" />
+        <SidebarLink to="/dashboard/cuentas-por-cobrar" label="Cuentas por Cobrar" :icon="HandCoins" />
       </nav>
 
       <div :class="['p-4', isDarkTheme ? 'border-t border-[#2a2a32]' : 'border-t border-gray-200']">
@@ -118,7 +119,7 @@ import { useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import {
   Flower2, X, Menu, Bell, Sun, Moon, Volume2, VolumeX, LogOut,
-  Boxes, ClipboardList, Truck, PiggyBank, Wallet,
+  Boxes, ClipboardList, Truck, PiggyBank, Wallet, HandCoins,
 } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth'
 import { usePedidosStore } from '@/stores/pedidos'

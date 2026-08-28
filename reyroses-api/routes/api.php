@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\CompraController;
 use App\Http\Controllers\Api\CajaController;
+use App\Http\Controllers\Api\InversionController;
 
 // --- RUTAS PÚBLICAS (Cualquiera las puede ver o usar) ---
 
@@ -36,6 +37,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Ruta para actualizar el estado del pedido
     Route::put('/orders/{id}/status', [OrderController::class, 'updateStatus']);
 
+    // Marcar una venta al crédito como pagada
+    Route::put('/orders/{id}/marcar-pagado', [OrderController::class, 'marcarPagado']);
+
     // Cerrar sesión (revoca el token actual)
     Route::post('/logout', function (Request $request) {
         $request->user()->currentAccessToken()->delete();
@@ -56,6 +60,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/caja/movimientos', [CajaController::class, 'guardarMovimiento']);
     Route::get('/caja/arqueos', [CajaController::class, 'arqueos']);
     Route::post('/caja/arqueos', [CajaController::class, 'guardarArqueo']);
+
+    // --- Fondo de inversión ---
+    Route::get('/inversion', [InversionController::class, 'index']);
+    Route::post('/inversion', [InversionController::class, 'store']);
 
     Route::post('/save-fcm-token', function (Request $request) {
         $request->validate([

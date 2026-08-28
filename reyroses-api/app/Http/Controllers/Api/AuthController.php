@@ -20,8 +20,8 @@ class AuthController extends Controller
         // 2. Buscar al usuario en la base de datos
         $user = User::where('email', $request->email)->first();
 
-        // 3. Verificar que el usuario exista y la contraseña coincida
-        if (! $user || ! Hash::check($request->password, $user->password)) {
+        // 3. Verificar que el usuario exista, la contraseña coincida y sea admin
+        if (! $user || ! Hash::check($request->password, $user->password) || $user->role !== 'admin') {
             return response()->json([
                 'message' => 'Las credenciales son incorrectas.'
             ], 401); // 401 significa "No autorizado"

@@ -65,7 +65,7 @@
             <div class="grid grid-cols-5 gap-3">
               <div v-for="size in ['50', '60', '70', '80', '90']" :key="size" class="text-center flex flex-col gap-2">
                 <span :class="['text-[10px] font-bold', isDarkTheme ? 'text-zinc-600' : 'text-gray-400']">{{ size
-                  }}cm</span>
+                }}cm</span>
 
                 <input v-model="form['price_' + size]" type="number" step="0.01" placeholder="S/ Precio"
                   :class="['w-full px-1 py-2 text-xs font-bold rounded-lg focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 outline-none text-center', isDarkTheme ? 'text-white bg-[#16161a] border border-[#2a2a32]' : 'text-gray-900 bg-white border border-gray-200']" />
